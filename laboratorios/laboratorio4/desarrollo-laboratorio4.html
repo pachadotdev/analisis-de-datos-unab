@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Desarrollo Laboratorio Nº4</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Desarrollo Laboratorio Nº4">
+  <meta name="author" content="">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../../libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../../libraries/frameworks/io2012/js/slides" 
+    src="../../libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="../../assets/img/logounab.png">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Desarrollo Laboratorio Nº4</h1>
+    <h2>Análisis de Datos</h2>
+    <p>Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas<br/>Profesor Ayudante de Laboratorio: Mauricio Vargas<br/>Ayudantes: Franco Mansilla y Mauricio Díaz<br/><br/>Universidad Nacional Andrés Bello</p>
+  </hgroup>
+  <article></article>  
+  <footer class = 'license'>
+    <a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+    </a>
+  </footer>
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Parte 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <h2>Modelo Lineal Univariado</h2>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Datos de Galton (Complemento Laboratorio 3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Considere nuevamente los datos de estatura de padres e hijos</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-1-1.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Ajuste de la mejor recta de regresión</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Sea \(Y_i\) la estatura del hijo \(i^{th}\) y \(X_i\) la estatura del padre \(i^{th}\). </li>
+<li>Considere la recta con mejor ajuste \(Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i\).</li>
+<li>La ecuación de mínimos cuadrados es \[\sum_{i=1}^n [Y_i - (\beta_0 + \beta_1 X_i)]^2.\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Resultados</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>El modelo de mínimos cuadrados ajusta la recta \(Y = \beta_0 + \beta_1 X\) a través de los pares ordenados \((X_i, Y_i)\) e \(Y_i\) es el output que se obtiene de la recta \(Y = \hat \beta_0 + \hat \beta_1 X\) con
+\[\hat \beta_1 = Cor(Y, X) \frac{Sd(Y)}{Sd(X)} ~~~ \hat \beta_0 = \bar Y - \hat \beta_1 \bar X.\]</li>
+<li>\(\hat \beta_1\) se expresa en unidades de \(Y / X\), \(\hat \beta_0\) se expresa en unidades de \(Y\).</li>
+<li>La recta de regresión pasa por \((\bar X, \bar Y)\).</li>
+<li>La pendiente de la recta de regresión con \(X\) como output e \(Y\) como input es \(Cor(Y, X) \frac{Sd(X)}{Sd(Y)}\). </li>
+<li>La pendiente es la misma que se obtiene que si se centraran los datos \((X_i - \bar X, Y_i - \bar Y)\) y se estimara una regresión que pasa por \((0,0)\).</li>
+<li>Si se normalizan los datos \(\left(\displaystyle\frac{X_i - \bar X}{Sd(X)}, \displaystyle\frac{Y_i - \bar Y}{Sd(Y)} \right)\), la pendiente es \(Cor(Y, X)\).</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Álgebra vs Comandos</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comparando los cálculos en R</p>
+
+<pre><code class="r">y &lt;- galton$child
+x &lt;- galton$parent
+beta1 &lt;- cor(y, x) *  sd(y) / sd(x)
+beta0 &lt;- mean(y) - beta1 * mean(x)
+rbind(c(beta0, beta1), coef(lm(y ~ x)))
+</code></pre>
+
+<pre><code>     (Intercept)         x
+[1,]    23.94153 0.6462906
+[2,]    23.94153 0.6462906
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Álgebra vs Comandos</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Invirtiendo la relación entre las variables</p>
+
+<pre><code class="r">beta1 &lt;- cor(y, x) *  sd(x) / sd(y)
+beta0 &lt;- mean(x) - beta1 * mean(y)
+rbind(c(beta0, beta1), coef(lm(x ~ y)))
+</code></pre>
+
+<pre><code>     (Intercept)         y
+[1,]    46.13535 0.3256475
+[2,]    46.13535 0.3256475
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Revisando los datos de Galton (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>La regresión desde el origen tiene la misma pendiente si primero centramos los datos</p>
+
+<pre><code class="r">yc &lt;- y - mean(y)
+xc &lt;- x - mean(x)
+beta1 &lt;- sum(yc * xc) / sum(xc ^ 2)
+c(beta1, coef(lm(y ~ x))[2])
+</code></pre>
+
+<pre><code>                  x 
+0.6462906 0.6462906 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Revisando los datos de Galton (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Si se normalizan los datos la pendiente es el coeficiente de correlación</p>
+
+<pre><code class="r">yn &lt;- (y - mean(y))/sd(y)
+xn &lt;- (x - mean(x))/sd(x)
+c(cor(y, x), cor(yn, xn), coef(lm(yn ~ xn))[2])
+</code></pre>
+
+<pre><code>                           xn 
+0.4587624 0.4587624 0.4587624 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Resultados</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Mejor recta de regresión</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Parte 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <h2>Modelo Lineal Multivariado</h2>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Extensión del caso univariado</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>El modelo lineal generalizado extiende el modelo lineal simple (SLR) agregando términos linealmente al modelo. Típicamente \(X_{1i}=1\) (se incluye un intercepto).
+\[
+Y_i =  \beta_1 X_{1i} + \beta_2 X_{2i} + \ldots +
+\beta_{p} X_{pi} + \epsilon_{i} 
+= \sum_{k=1}^p X_{ik} \beta_j + \varepsilon_{i}.
+\]</li>
+<li>La estimación por OLS (y también la estimación por ML bajo supuestos de iid y los errores Gaussianos) minimiza
+\[
+\sum_{i=1}^n \left(Y_i - \sum_{k=1}^p X_{ki} \beta_j\right)^2.
+\]</li>
+<li>Lo importante es la linealidad de los coeficientes, entonces
+\[
+Y_i =  \beta_1 X_{1i}^2 + \beta_2 X_{2i}^2 + \ldots +
+\beta_{p} X_{pi}^2 + \varepsilon_{i}. 
+\]
+también es un modelo lineal (aunque los regresores sean términos cuadráticos).</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Interpretación de los coeficientes</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[E[Y | X_1 = x_1, \ldots, X_p = x_p] = \sum_{k=1}^p x_{k} \beta_k\]</p>
+
+<p>\[
+E[Y | X_1 = x_1 + 1, \ldots, X_p = x_p] = (x_1 + 1) \beta_1 + \sum_{k=2}^p x_{k} \beta_k
+\]</p>
+
+<p>\[
+E[Y | X_1 = x_1 + 1, \ldots, X_p = x_p]  - E[Y | X_1 = x_1, \ldots, X_p = x_p]\]
+\[= (x_1 + 1) \beta_1 + \sum_{k=2}^p x_{k} \beta_k + \sum_{k=1}^p x_{k} \beta_k = \beta_1 \]
+Un coeficiente de regresión multivariada es el cambio esperado en el output ante un cambio en una unidad en el regresor correspondiente, manteniendo todos los demás regresores fijos.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Tasas de hambre en la población infantil (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Instancia de trabajo</p>
+
+<pre><code class="r">#link descarga 
+#http://apps.who.int/gho/athena/data/GHO/WHOSIS_000008.csv
+setwd(&quot;/Users/pacha/analisis-de-datos-unab/laboratorios/laboratorio4/&quot;)
+hunger &lt;- read.csv(&quot;hunger.csv&quot;)
+hunger &lt;- hunger[hunger$Sex!=&quot;Both sexes&quot;,]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Tasas de hambre en la población infantil (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Sin controlar por género:</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Tasas de hambre en la población infantil (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Controlando por género (azul = niñas, verde = niños):</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Modelo univariado (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Sin controlar por género:</p>
+
+<p>\[Hu_i = b_0 + b_1 Y_i + e_i\]</p>
+
+<p>\(b_0\) = % de hambre en el año 0</p>
+
+<p>\(b_1\) = disminución del % de hambre por año</p>
+
+<p>\(e_i\) = todas las variables no medidas</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Modelo univariado (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="rimage center"><img src="fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Modelo univariado (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Controlando por género:</p>
+
+<p>\[HuF_i = bf_0 + bf_1 YF_i + ef_i\]</p>
+
+<p>\(bf_0\) = % de hambre en las niñas en el año 0</p>
+
+<p>\(bf_1\) = disminución del % de hambre por año en las niñas</p>
+
+<p>\(ef_i\) = todas las variables no medidas</p>
+
+<p>\[HuM_i = bm_0 + bm_1 YM_i + em_i\]</p>
+
+<p>\(bm_0\) = % de hambre en los niños en el año 0</p>
+
+<p>\(bm_1\) = disminución del % de hambre por año en las niños</p>
+
+<p>\(em_i\) = todas las variables no medidas</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Modelo univariado (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="rimage center"><img src="fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Modelo multivariado (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Las dos rectas anteriores tienen la misma pendiente. Vamos a estimar el siguiente modelo:</p>
+
+<p>\[Hu_i = b_0 + b_1 M_i + b_2 Y_i + e^*_i\]</p>
+
+<p>\(b_0\) = % de hambre en las niñas en el año 0</p>
+
+<p>\(M_i\) = \(\begin{cases} 1 &\text{si es niño} \cr 0 &\text{si es niña} \end{cases}\)</p>
+
+<p>\(b_0 + b_1\) = % de hambre en las niños en el año 0</p>
+
+<p>\(b_2\) = disminución del % de hambre por año en niños o niñas</p>
+
+<p>\(e^*_i\) = todas las variables no medidas</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Modelo multivariado (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="rimage center"><img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Modelo multivariado (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[Hu_i = b_0 + b_1 M_i + b_2 Y_i + b_3 (M_i \cdot Y_i) + e^+_i\]</p>
+
+<p>\(b_0\) = % de hambre en las niñas en el año 0</p>
+
+<p>\(M_i\) = \(\begin{cases} 1 &\text{si es niño} \cr 0 &\text{si es niña} \end{cases}\)</p>
+
+<p>\(b_0 + b_1\) = % de hambre en las niños en el año 0</p>
+
+<p>\(b_2\) = disminución del % de hambre por año en niños o niñas</p>
+
+<p>\(b_2 + b_3\) = disminución del % de hambre por año en los niños</p>
+
+<p>\(e^+_i\) = todas las variables no medidas</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Modelo multivariado (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="rimage center"><img src="fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Resultados</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">coefficients(lmBoth)
+</code></pre>
+
+<pre><code>               (Intercept)                hunger$Year             hunger$SexMale 
+              595.83543620                -0.28958348                64.74249171 
+hunger$Year:hunger$SexMale 
+               -0.03139868 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Ejercicio</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usando la encuesta <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio4/casen2013.dta.zip">CASEN 2013</a> estime un modelo log-lineal
+\[ 
+\log(y_i) = \beta_0 + \sum_{i=1}^n \beta_i x_i + \varepsilon_i
+\]
+que permita predecir el salario por hora de los profesionales chilenos de entre 35 y 45 años que tienen una jornada laboral de al menos 30 horas por semana.</p>
+
+<p>Considere como regresores las variables:</p>
+
+<ul>
+<li>Sexo</li>
+<li>Experiencia laboral</li>
+<li>Si la persona reside en la Región Metropolitana</li>
+<li>Si la persona trabaja en la Administración Pública</li>
+</ul>
+
+<p>Extienda los resultados de su regresión a la población del país.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Estimadores para la población (población = país)</p>
+
+<pre><code>              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.5348155  0.0889943   84.67   &lt;2e-16 ***
+sexomujer   -0.2591384  0.0096771  -26.78   &lt;2e-16 ***
+esc          0.1346419  0.0021693   62.07   &lt;2e-16 ***
+exp         -0.1681013  0.0066858  -25.14   &lt;2e-16 ***
+exp2         0.0038441  0.0001431   26.86   &lt;2e-16 ***
+r13          0.1953442  0.0096526   20.24   &lt;2e-16 ***
+sl           0.2222964  0.0204180   10.89   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 5.793 on 18174 degrees of freedom
+Multiple R-squared:  0.371, Adjusted R-squared:  0.3708 
+F-statistic:  1787 on 6 and 18174 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+<p>El desarrollo cuenta con un <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio4/ejercicio-laboratorio4.R">código</a> y un archivo <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio4/renombrar-niveles.xlsx">Excel</a>.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Parte 1'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Datos de Galton (Complemento Laboratorio 3)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Ajuste de la mejor recta de regresión'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Resultados'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Álgebra vs Comandos'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Álgebra vs Comandos'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Revisando los datos de Galton (1)'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Revisando los datos de Galton (2)'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Resultados'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Parte 2'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Extensión del caso univariado'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Interpretación de los coeficientes'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Tasas de hambre en la población infantil (1)'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Tasas de hambre en la población infantil (2)'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Tasas de hambre en la población infantil (3)'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Modelo univariado (1)'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Modelo univariado (2)'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Modelo univariado (3)'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Modelo univariado (4)'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Modelo multivariado (1)'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Modelo multivariado (2)'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Modelo multivariado (3)'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Modelo multivariado (4)'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Resultados'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Ejercicio'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Desarrollo Ejercicio'>
+         26
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="../../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

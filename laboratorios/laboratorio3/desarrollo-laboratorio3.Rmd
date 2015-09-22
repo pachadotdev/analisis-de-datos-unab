@@ -1,0 +1,327 @@
+---
+title: "Desarrollo Laboratorio Nº3"
+subtitle: Análisis de Datos
+author1: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas"
+author2: "Profesor Ayudante de Laboratorio: Mauricio Vargas"
+author3: "Ayudantes: Franco Mansilla y Mauricio Díaz"
+job: "Universidad Nacional Andrés Bello"
+logo: logounab.png
+license : by-nc-sa
+hitheme: tomorrow
+framework: io2012
+highlighter: highlight.js
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+<!-- knit : slidify::knit2slides --> 
+knit : slidify::knit2slides
+---
+
+```{r setup, cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE}
+library(knitr) 
+options(width = 100)
+opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+
+options(xtable.type = 'html')
+knit_hooks$set(inline = function(x) {
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+knit_hooks$set(plot = knitr:::hook_plot_html)
+```
+
+## Modelo de Regresión Básico
+* Mínimos cuadrados es una herramienta de estimación.
+* Para realizar inferencia se desarrolla un modelo probabilístico de regresión lineal
+$$
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_{i}
+$$
+* Aquí $\varepsilon_{i}$ se asume iid $N(0, \sigma^2)$. 
+* Note que $E[Y_i ~|~ X_i = x_i] = \mu_i = \beta_0 + \beta_1 x_i$
+* Note que $Var(Y_i ~|~ X_i = x_i) = \sigma^2$.
+* La estimación por ML de $\beta_0$ y $\beta_1$ coincide con la estimación por OLS
+  $$\hat \beta_1 = Cor(Y, X) \frac{Sd(Y)}{Sd(X)} ~~~ \hat \beta_0 = \bar Y - \hat \beta_1 \bar X$$
+* $E[Y ~|~ X = x] = \beta_0 + \beta_1 x$
+* $Var(Y ~|~ X = x) = \sigma^2$
+
+---
+
+## Interpretación de los coeficientes (1)
+
+### Intercepto
+* $\beta_0$ es el valor esperado del output cuando el input es 0
+$$
+E[Y | X = 0] =  \beta_0 + \beta_1 \times 0 = \beta_0
+$$
+* Note que esto no siempre es de interés, por ejemplo cuando $X=0$ es imposible o está fuera del rango de los datos (e.g. Si $X$ corresponde a presión sanguínea, estatura, etc.)
+* Considere que
+$$
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
+= \beta_0 + a \beta_1 + \beta_1 (X_i - a) + \varepsilon_i
+= \tilde \beta_0 + \beta_1 (X_i - a) + \varepsilon_i
+$$
+Entonces, si desplazamos $X$ en $a$ unidades cambia el intercepto pero no la pendiente.  menudo $a$ se fija en $\bar X$ tal que  el intercepto se interpreta como la respuesta esperada en el valor promedio de $X$.
+
+---
+
+## Interpretación de los coeficientes (2)
+
+### Pendiente
+
+* $\beta_1$ es el cambio esperado en el output cuando el input cambia en una unidad
+$$
+E[Y ~|~ X = x+1] - E[Y ~|~ X = x] =
+\beta_0 + \beta_1 (x + 1) - (\beta_0 + \beta_1 x ) = \beta_1
+$$
+* Considere el impacto de cambiar las unidades (medición) de $X$
+$$
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
+= \beta_0 + \frac{\beta_1}{a} (X_i a) + \varepsilon_i
+= \beta_0 + \tilde \beta_1 (X_i a) + \varepsilon_i
+$$
+* Entonces, la multiplicación de $X$ por un factor $a$ resulta en que se divide el coeficiente por el mismo factor $a$.
+* Si queremos predecir el output dado un valor del input, digamos $X$, el modelo de regresión predice
+  $$
+  \hat \beta_0 + \hat \beta_1 X
+  $$
+
+---
+
+## Interpretación de los coeficientes (3)
+
+### Ejemplo
+
+* Si $X$ es la estatura en $m$ e $Y$ es el peso en $kg$. Entonces $\beta_1$ es $kg/m$. Convirtiendo $X$ en $cm$ implica multiplicar $X$ por $100 cm/m$. Para obtener $\beta_1$ en las unidades correctas, tenemos que dividir por $100 cm /m$ y así se tendrán las unidades correctas. 
+$$
+X m \times \frac{100cm}{m} = (100 X) cm
+~~\mbox{y}~~
+\beta_1 \frac{kg}{m} \times\frac{1 m}{100cm} = 
+\left(\frac{\beta_1}{100}\right)\frac{kg}{cm}
+$$
+
+---
+
+## Ejemplo: Base de datos `diamond` (1)
+
+### Datos
+
+* Precio de los diamantes (en dólares de Singapur)
+* Peso de los diamantes (en quilates)
+* Quilate = medida estándar del peso de un diamante = 0,2g
+* Para obtener los datos hay que usar `library(UsingR); data(diamond)`
+
+---
+
+## Ejemplo: Base de datos `diamond` (2)
+
+### Gráfico
+```{r, echo = FALSE, fig.height=5,fig.width=5}
+library(UsingR)
+data(diamond)
+library(ggplot2)
+g = ggplot(diamond, aes(x = carat, y = price))
+g = g + xlab("Mass (carats)")
+g = g + ylab("Price (SIN $)")
+g = g + geom_point(size = 7, colour = "black", alpha=0.5)
+g = g + geom_point(size = 5, colour = "blue", alpha=0.2)
+g = g + geom_smooth(method = "lm", colour = "black")
+g
+```
+
+---
+
+## Ejemplo: Base de datos `diamond` (3)
+
+### Ajuste del modelo de regresión
+```{r}
+fit <- lm(price ~ carat, data = diamond)
+coef(fit)
+```
+
+* Se estima un aumento esperado de `r round(coef(fit)[2], 2)` dólares de Singapur en el precio por un aumento de un quilate en el precio del diamante.
+* El intercepto `r round(coef(fit)[1], 2)` corresponde al precio esperado de un diamante de 0 quilates.
+
+Si se quiere información más detallada se usa `summary(fit)`
+
+---
+
+## Ejemplo: Base de datos `diamond` (4)
+
+### Obtención de un intercepto interpretable
+Se puede escribir el modelo usando la desviación con respecto a la media ($X-\bar{X}$) como input.
+```{r, echo = TRUE}
+fit2 <- lm(price ~ I(carat - mean(carat)), data = diamond)
+coef(fit2)
+```
+
+Entonces $`r round(coef(fit2)[1], 1)` es el precio esperado para un diamante de peso promedio que en el caso de los datos corresponde a `r mean(diamond$carat)` quilates.
+
+---
+
+## Ejemplo: Base de datos `diamond` (5)
+
+### Cambio de escala
+* Un incremento de 1 quilate es muy grande, ¿qué se esperaría si el peso aumenta 1/10 quilates?
+* Se puede dividir el coeficiente por 10.
+* Se espera un aumento de `r round(coef(fit)[2], 2) / 10` dólares de Singapur en el precio por cada  1/10 quilates que aumenta el precio.
+* Esto es lo mismo que cambiar la escala de $X$ y ajustar la regresión
+```{r, echo = TRUE}
+fit3 <- lm(price ~ I(carat * 10), data = diamond)
+coef(fit3)
+```
+
+---
+
+## Ejemplo: Base de datos `diamond` (5)
+
+### Predicción del precio de un diamante
+
+Supongamos que tenemos tres diamantes cuyos pesos son 0.16, 0,27 y 0,34 quilates. La estimación de su precio se obtiene de la siguiente forma:
+```{r, echo = TRUE, eval=TRUE}
+newx <- c(0.16, 0.27, 0.34)
+predict(fit, newdata = data.frame(carat = newx))
+```
+
+---
+
+## Ejemplo: Base de datos `diamond` (6)
+
+### Gráfico para interpretar la regresión
+
+<!-- * Valores observados de los $X$ de la base de datos $\rightarrow$ color azul
+* Valores esperados de los $X$ de la base de datos $\rightarrow$ color rojo
+* Valores estimados de los $X$ nuevos (los 3 diamantes de la parte anterior) $\rightarrow$  líneas rectas -->
+```{r, echo = FALSE, fig.height=5,fig.width=5}
+data(diamond)
+newy <- coef(fit)[1] + newx + coef(fit)[2] * newx
+plot(diamond$carat, diamond$price,  
+     xlab = "Peso (quilates)", 
+     ylab = "Precio (dolares de Singapur)", 
+     bg = "royalblue", 
+     xlim=c(0.1, 0.4),
+     col = "black", cex = 1.1, pch = 21,frame = FALSE)
+abline(fit, lwd = 2)
+points(diamond$carat, predict(fit), pch = 19, col = "red")
+lines(c(0.16, 0.16, 0.1), 
+      c(200, coef(fit)[1] + coef(fit)[2] * 0.16,
+      coef(fit)[1] + coef(fit)[2] * 0.16))
+lines(c(0.27, 0.27, 0.1), 
+      c(200, coef(fit)[1] + coef(fit)[2] * 0.27,
+        coef(fit)[1] + coef(fit)[2] * 0.27))
+lines(c(0.34, 0.34, 0.1), 
+      c(200, coef(fit)[1] + coef(fit)[2] * 0.34,
+        coef(fit)[1] + coef(fit)[2] * 0.34))
+text(newx, rep(220, 3), labels = newx, pos = 4)
+text(rep(0.12,3), round(newy, digits=2), labels =  round(newy, digits=2), pos = 3)
+```
+
+---
+
+## Regresión usando ANOVA (1)
+
+Preguntas: 
+
+* ¿Es más económico un automóvil automático o uno mecánico?
+* ¿Qué variables pueden explicar el rendimiento de un automóvil?
+
+Usaremos la base de datos `mtcars` que viene en la librería `datasets`. La base contiene información sobre el rendimiento (millas por galón) y características (peso, transmisión, cilindros, etc ) de varios modelos de automóviles.
+
+Para ver las variables de la base de datos:
+```{r, echo=TRUE, eval=FALSE}
+library(datasets) 
+data(mtcars) 
+str(mtcars)
+head(mtcars, n=5)
+```
+
+---
+
+## Regresión usando ANOVA (2)
+
+ANOVA explica las fuentes de variabilidad. Para evaluar la interacción de `mpg` con las demás variables usamos `analysis <- aov(mpg ~ ., data = mtcars); summary(analysis)`
+```{r, echo=FALSE}
+analysis <- aov(mpg ~ ., data = mtcars) 
+summary(analysis)
+```
+
+---
+
+## Regresión usando ANOVA (3)
+
+### Modelo 1
+
+Estimaremos el siguiente modelo considerando los datos de la tabla ANOVA:
+$$
+MPG_i = \beta_0 + \beta_1 CYL_i + \beta_2 DISP_i + \beta_3 WT_i + \beta_4 AM_i + \varepsilon_i
+$$
+```{r}
+fit1 <- lm(mpg ~ cyl + disp + wt + am, data = mtcars)
+coefficients(fit1)
+```
+
+---
+
+## Regresión usando ANOVA (4)
+
+### Modelo 1
+
+Usando `summary(fit1)`
+```
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 40.898313   3.601540  11.356 8.68e-12 ***
+cyl         -1.784173   0.618192  -2.886  0.00758 ** 
+disp         0.007404   0.012081   0.613  0.54509    
+wt          -3.583425   1.186504  -3.020  0.00547 ** 
+am           0.129066   1.321512   0.098  0.92292    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+```
+ $\Rightarrow$ no se debe incluir la variable `disp`.
+
+---
+
+## Regresión usando ANOVA (5)
+
+### Modelo 2
+
+Estimaremos el siguiente modelo considerando la significancia de las variables:
+$$
+MPG_i = \beta_0 + \beta_1 CYL_i + \beta_2 WT_i + \beta_3 AM_i + \varepsilon_i
+$$
+```{r}
+fit2 <- lm(mpg ~ cyl + wt + am, data = mtcars)
+coefficients(fit2)
+```
+
+---
+
+## Ejercicio
+
+Escriba un informe de no más de 2 páginas junto a su grupo de trabajo (los mismos del proyecto de curso) en el que se responda claramente:
+ 
+* ¿Cuáles son las variables más importantes para explicar la variable MPG en distintos modelos de automóviles?
+* ¿Cuál de los dos modelos de la parte anterior es mejor y por qué?
+* ¿Se puede decir que la variable AM (tipo de transmisión) explica la variable MPG en distintos modelos de automóviles? 
+* Comente los alcances y limitaciones del modelo en base a los datos disponibles y los supuestos de OLS
+
+Indicaciones:
+
+* Use argumentos estadísticos y argumentos teóricos en base a prensa especializada
+* Presente sus resultados en un lenguaje simple y formal
+
+---
+
+## Desarrollo Ejercicio (Parcial)
+
+Para comparar los modelos vamos a testear si el modelo extendido tiene mayor poder predictivo que el modelo reducido. Se tiene $H_0: \beta_{\text{disp}} = 0$ y el estadístico es $$F = \frac{(\text{SSE}_{\text{reduced}} - \text{SSE}_{\text{extended}})/(p-k)}{\text{SSE}_{\text{extended}}/(n-p-1)}$$
+```{r}
+anova(fit2, fit1, test = "F")
+```
+ $\Rightarrow$ no hay evidencia para decir que es preferible el modelo extendido.
+

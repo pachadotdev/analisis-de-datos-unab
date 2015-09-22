@@ -1,0 +1,30 @@
+---
+title: "Desarrollo Laboratorio Nº1"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+    
+Indicación de trabajo:
+
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/laboratorio1.pdf">laboratorio1.pdf</a>
+
+Archivos Excel:
+
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/laboratorio1.xlsx">laboratorio1.xlsx</a>
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/laboratorio1.csv">laboratorio1.csv</a>
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/desarrollo-laboratorio1.xlsx">desarrollo-laboratorio1.xlsx</a>
+
+Archivos R:
+
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/desarrollo-laboratorio1.R">desarrollo-laboratorio1.R</a>
+* <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/desarrollo-laboratorio1-read.csv.R">desarrollo-laboratorio1-read.csv.R</a>

@@ -1,0 +1,62 @@
+---
+title: "Complemento Laboratorio Nº4"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+
+# Ejercicio 1
+Examine las variables de la base de datos `appleProdFr86` y en base a estos datos estime los parámetros de la siguiente función de producción lineal:
+$$y = \beta_0 + \sum_i \beta_i x_i$$
+
+Obtenga una predicción del output.
+
+```{r}
+data("appleProdFr86", package = "micEcon")
+data <- appleProdFr86
+rm(appleProdFr86)
+
+data$qCap <- data$vCap/data$pCap
+data$qLab <- data$vLab/data$pLab
+data$qMat <- data$vMat/data$pMat
+```
+
+```{r}
+# funcion lineal
+prodLin <- lm(qOut ~ qCap + qLab + qMat, data = data)
+summary(prodLin)
+data$qOutLin <- fitted(prodLin)
+```
+
+# Ejercicio 2
+Examine las variables de la base de datos `appleProdFr86` y en base a estos datos estime los parámetros de la siguiente función de producción cuadrática:
+$$y = \beta_0 + \sum_i \beta_i x_i + \frac{1}{2} \sum_i \sum_j \beta_{ij} x_i x_j$$
+
+Obtenga una predicción del output.
+
+```{r}
+# funcion cuadrática
+prodQuad <- lm(qOut ~ qCap + qLab + qMat + I(0.5*qCap^2) + I(0.5*qLab^2) + I(0.5*qMat^2)
+               + I(qCap*qLab) + I(qCap*qMat) + I(qLab*qMat), data = data)
+summary(prodQuad)
+data$qOutQuad <- fitted(prodQuad)
+```
+
+# Ejercicio 3
+
+Determine cual de las dos funciones es más adecuada para representar la relación entre los inputs y el output.
+
+```{r}
+library("lmtest")
+waldtest(prodLin, prodQuad)
+lrtest(prodLin, prodQuad)
+```

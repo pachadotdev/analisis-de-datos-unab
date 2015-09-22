@@ -1,0 +1,191 @@
+---
+title: "Complemento Laboratorio Nº3"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+
+```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F, results='hide'}
+# make this an external chunk that can be included in any file
+library(knitr) 
+options(width = 100)
+opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+
+options(xtable.type = 'html')
+knit_hooks$set(inline = function(x) {
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+knit_hooks$set(plot = knitr:::hook_plot_html)
+runif(1)
+```
+
+## Lo que veremos
+* Usar la estatura de los padres para predecir la de los hijos
+* Encontrar una relación entre ambas estaturas
+* Encontrar la variación de la estatura de los hijos que no depende de la estatura de los padres (variación residual)
+* Los supuestos que se necesitan para generalizar más allá de los datos
+* Por qué los hijos de padres muy altos tienden a ser más bajos (regresión a la media)
+
+## Los datos de Galton
+
+* Datos recolectados y analizados por Francis Galton en 1885. 
+* Galton fue un científico que creó los conceptos de correlación y regresión.
+* Veremos la distribución marginal de los datos.
+* La corrección por género se obtiene multiplicando la estatura de las mujeres por 1,08.
+
+```{r galton,fig.height=3.5,fig.width=8}
+library(UsingR); data(galton); library(reshape); long <- melt(galton)
+g <- ggplot(long, aes(x = value, fill = variable)) 
+g <- g + geom_histogram(colour = "black", binwidth=1) 
+g <- g + facet_grid(. ~ variable)
+g
+```
+
+## Encontrando la media usando mínimos cuadrados
+
+* Veamos un poco los datos
+```{r}
+head(galton, n=10) #primeras 10 observaciones (medidas en pulgadas)
+dim(galton) #tamaño muestral = 928 ; variables  = 2
+```
+
+* Considere solo la estatura de los hijos. ¿Cómo se describe la media?
+  
+  * Una definición es que siendo $Y_i$ la estatura del hijo $i$ para $i= 1,\ldots , n$ con $n=928$entonces la media es el valor de $\mu$ que minimiza la ecuación $\sum_{i=1}^n (Y_i - \mu)^2$
+  * Se tiene que $\mu = \bar Y$.
+
+
+## Experimento
+
+### Usar RStudio para manipular el valor de $\mu$ y observar cuál es el valor que minimiza la ecuación.
+
+Código a replicar:
+```
+library(UsingR); data(galton)
+library(manipulate)
+myHist <- function(mu){
+    mse <- mean((galton$child - mu)^2)
+    g <- ggplot(galton, aes(x = child)) + geom_histogram(fill = "royalblue", colour = "black", binwidth=1)
+    g <- g + geom_vline(xintercept = mu, size = 2, colour = "red")
+    g <- g + ggtitle(paste("mu = ", mu, ", MSE = ", round(mse, 2), sep = ""))
+    g
+}
+manipulate(myHist(mu), mu = slider(62, 74, step = 0.5))
+```
+
+## El estimador de mínimos cuadrados es la media empírica
+```{r , fig.height=4, fig.width=4, fig.align='center'}
+g <- ggplot(galton, aes(x = child)) + geom_histogram(fill = "royalblue", colour = "black", binwidth=1)
+g <- g + geom_vline(xintercept = mean(galton$child), size = 2, colour = "red")
+g
+```
+
+### El desarrollo algebraico (no es parte del laboratorio como tal) es como sigue:
+$$ 
+\begin{align} 
+\sum_{i=1}^n \left(Y_i - \mu\right)^2 & = \
+\sum_{i=1}^n \left(Y_i - \bar Y + \bar Y - \mu\right)^2 \\ 
+& = \sum_{i=1}^n \left(Y_i - \bar Y\right)^2 + \
+2 \sum_{i=1}^n \left(Y_i - \bar Y\right)  \left(\bar Y - \mu\right) +\
+\sum_{i=1}^n \left(\bar Y - \mu\right)^2 \\
+& = \sum_{i=1}^n \left(Y_i - \bar Y\right)^2 + \
+2 \left(\bar Y - \mu\right) \sum_{i=1}^n \left(Y_i - \bar Y\right) +\
+\sum_{i=1}^n \left(\bar Y - \mu\right)^2 \\
+& = \sum_{i=1}^n \left(Y_i - \bar Y\right)^2 + \
+2 \left(\bar Y - \mu\right)  \left(\left(\sum_{i=1}^n Y_i\right) -\
+ n \bar Y\right) +\
+\sum_{i=1}^n \left(\bar Y - \mu\right)^2 \\
+& = \sum_{i=1}^n \left(Y_i - \bar Y\right)^2 + \
+ \sum_{i=1}^n \left(\bar Y - \mu\right)^2\\ 
+& \geq \sum_{i=1}^n \left(Y_i - \bar Y\right)^2 \
+\end{align} 
+$$
+
+## Comparando la estatura de los padres e hijos
+
+El tamaño de los puntos en $(X,Y)$ representa la cantidad de observaciones que coinciden en dicho valor.
+
+```{r freqGalton, fig.height=6,fig.width=7,echo=FALSE}
+library(UsingR); data(galton);
+library(dplyr)
+freqData <- as.data.frame(table(galton$child, galton$parent))
+names(freqData) <- c("child", "parent", "freq")
+freqData$child <- as.numeric(as.character(freqData$child))
+freqData$parent <- as.numeric(as.character(freqData$parent))
+g <- ggplot(filter(freqData, freq > 0), aes(x = parent, y = child))
+g <- g  + scale_size(range = c(2, 20), guide = "none" )
+g <- g + geom_point(colour="grey60", aes(size = freq, show_guide = FALSE))
+g <- g + geom_point(aes(colour=freq, size = freq))
+g <- g + scale_colour_gradient(low = "royalblue", high="lightblue")                    
+g
+```
+
+## Regresión desde el origen
+
+* $X_i$ es la estatura de los padres.
+* Se tiene un valor $\beta$ que minimiza la ecuación $\sum_{i=1}^n (Y_i - X_i \beta)^2$
+* Se tiene que el intercepto es el punto $(0,0)$ y la recta es tal que minimiza la suma de las distancias verticales al cuadrado desde los puntos de cada observación a la recta.
+* Para que el intercepto sea interpretable se debe restar la media de los datos de manera que el intercepto sea $(\bar{X},\bar{Y})$
+
+## Experimento
+
+### Usar RStudio para manipular el valor de $\beta$ y observar cuál es el valor que minimiza la ecuación.
+
+```{r, echo = TRUE, eval = FALSE}
+library(UsingR); data(galton)
+library(dplyr)
+library(manipulate)
+y <- galton$child - mean(galton$child)
+x <- galton$parent - mean(galton$parent)
+freqData <- as.data.frame(table(x, y))
+names(freqData) <- c("child", "parent", "freq")
+freqData$child <- as.numeric(as.character(freqData$child))
+freqData$parent <- as.numeric(as.character(freqData$parent))
+myPlot <- function(beta){
+  g <- ggplot(filter(freqData, freq > 0), aes(x = parent, y = child))
+  g <- g  + scale_size(range = c(2, 20), guide = "none" )
+  g <- g + geom_point(colour="grey50", aes(size = freq, show_guide = FALSE))
+  g <- g + geom_point(aes(colour=freq, size = freq))
+  g <- g + scale_colour_gradient(low = "royalblue", high="lightblue")                     
+  g <- g + geom_abline(intercept = 0, slope = beta, size = 3)
+  mse <- mean( (y - beta * x) ^2 )
+  g <- g + ggtitle(paste("beta = ", beta, "mse = ", round(mse, 3)))
+  g
+}
+manipulate(myPlot(beta), beta = slider(0, 1.2, step = 0.05))
+```
+
+## Regresión
+
+```{r}
+lm(I(child - mean(child)) ~ I(parent - mean(parent)) - 1, data = galton)
+```
+
+```{r, fig.height=6,fig.width=7,echo=FALSE}
+freqData <- as.data.frame(table(galton$child, galton$parent))
+names(freqData) <- c("child", "parent", "freq")
+freqData$child <- as.numeric(as.character(freqData$child))
+freqData$parent <- as.numeric(as.character(freqData$parent))
+g <- ggplot(filter(freqData, freq > 0), aes(x = parent, y = child))
+g <- g  + scale_size(range = c(2, 20), guide = "none" )
+g <- g + geom_point(colour="grey60", aes(size = freq, show_guide = FALSE))
+g <- g + geom_point(aes(colour=freq, size = freq))
+g <- g + scale_colour_gradient(low = "royalblue", high="lightblue")                      
+lm1 <- lm(galton$child ~ galton$parent)
+g <- g + geom_abline(intercept = coef(lm1)[1], slope = coef(lm1)[2], size = 3, colour = grey(.5))
+g
+```
+

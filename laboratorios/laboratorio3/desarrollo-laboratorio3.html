@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Desarrollo Laboratorio Nº3</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Desarrollo Laboratorio Nº3">
+  <meta name="author" content="">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../../libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../../libraries/frameworks/io2012/js/slides" 
+    src="../../libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="../../assets/img/logounab.png">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Desarrollo Laboratorio Nº3</h1>
+    <h2>Análisis de Datos</h2>
+    <p>Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas<br/>Profesor Ayudante de Laboratorio: Mauricio Vargas<br/>Ayudantes: Franco Mansilla y Mauricio Díaz<br/><br/>Universidad Nacional Andrés Bello</p>
+  </hgroup>
+  <article></article>  
+  <footer class = 'license'>
+    <a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+    </a>
+  </footer>
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Modelo de Regresión Básico</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Mínimos cuadrados es una herramienta de estimación.</li>
+<li>Para realizar inferencia se desarrolla un modelo probabilístico de regresión lineal
+\[
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_{i}
+\]</li>
+<li>Aquí \(\varepsilon_{i}\) se asume iid \(N(0, \sigma^2)\). </li>
+<li>Note que \(E[Y_i ~|~ X_i = x_i] = \mu_i = \beta_0 + \beta_1 x_i\)</li>
+<li>Note que \(Var(Y_i ~|~ X_i = x_i) = \sigma^2\).</li>
+<li>La estimación por ML de \(\beta_0\) y \(\beta_1\) coincide con la estimación por OLS
+\[\hat \beta_1 = Cor(Y, X) \frac{Sd(Y)}{Sd(X)} ~~~ \hat \beta_0 = \bar Y - \hat \beta_1 \bar X\]</li>
+<li>\(E[Y ~|~ X = x] = \beta_0 + \beta_1 x\)</li>
+<li>\(Var(Y ~|~ X = x) = \sigma^2\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Interpretación de los coeficientes (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Intercepto</h3>
+
+<ul>
+<li>\(\beta_0\) es el valor esperado del output cuando el input es 0
+\[
+E[Y | X = 0] =  \beta_0 + \beta_1 \times 0 = \beta_0
+\]</li>
+<li>Note que esto no siempre es de interés, por ejemplo cuando \(X=0\) es imposible o está fuera del rango de los datos (e.g. Si \(X\) corresponde a presión sanguínea, estatura, etc.)</li>
+<li>Considere que
+\[
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
+= \beta_0 + a \beta_1 + \beta_1 (X_i - a) + \varepsilon_i
+= \tilde \beta_0 + \beta_1 (X_i - a) + \varepsilon_i
+\]
+Entonces, si desplazamos \(X\) en \(a\) unidades cambia el intercepto pero no la pendiente.  menudo \(a\) se fija en \(\bar X\) tal que  el intercepto se interpreta como la respuesta esperada en el valor promedio de \(X\).</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Interpretación de los coeficientes (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Pendiente</h3>
+
+<ul>
+<li>\(\beta_1\) es el cambio esperado en el output cuando el input cambia en una unidad
+\[
+E[Y ~|~ X = x+1] - E[Y ~|~ X = x] =
+\beta_0 + \beta_1 (x + 1) - (\beta_0 + \beta_1 x ) = \beta_1
+\]</li>
+<li>Considere el impacto de cambiar las unidades (medición) de \(X\)
+\[
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i
+= \beta_0 + \frac{\beta_1}{a} (X_i a) + \varepsilon_i
+= \beta_0 + \tilde \beta_1 (X_i a) + \varepsilon_i
+\]</li>
+<li>Entonces, la multiplicación de \(X\) por un factor \(a\) resulta en que se divide el coeficiente por el mismo factor \(a\).</li>
+<li>Si queremos predecir el output dado un valor del input, digamos \(X\), el modelo de regresión predice
+\[
+\hat \beta_0 + \hat \beta_1 X
+\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Interpretación de los coeficientes (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Ejemplo</h3>
+
+<ul>
+<li>Si \(X\) es la estatura en \(m\) e \(Y\) es el peso en \(kg\). Entonces \(\beta_1\) es \(kg/m\). Convirtiendo \(X\) en \(cm\) implica multiplicar \(X\) por \(100 cm/m\). Para obtener \(\beta_1\) en las unidades correctas, tenemos que dividir por \(100 cm /m\) y así se tendrán las unidades correctas. 
+\[
+X m \times \frac{100cm}{m} = (100 X) cm
+~~\mbox{y}~~
+\beta_1 \frac{kg}{m} \times\frac{1 m}{100cm} = 
+\left(\frac{\beta_1}{100}\right)\frac{kg}{cm}
+\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Datos</h3>
+
+<ul>
+<li>Precio de los diamantes (en dólares de Singapur)</li>
+<li>Peso de los diamantes (en quilates)</li>
+<li>Quilate = medida estándar del peso de un diamante = 0,2g</li>
+<li>Para obtener los datos hay que usar <code>library(UsingR); data(diamond)</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Gráfico</h3>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-1-1.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Ajuste del modelo de regresión</h3>
+
+<pre><code class="r">fit &lt;- lm(price ~ carat, data = diamond)
+coef(fit)
+</code></pre>
+
+<pre><code>(Intercept)       carat 
+  -259.6259   3721.0249 
+</code></pre>
+
+<ul>
+<li>Se estima un aumento esperado de 3721.02 dólares de Singapur en el precio por un aumento de un quilate en el precio del diamante.</li>
+<li>El intercepto -259.63 corresponde al precio esperado de un diamante de 0 quilates.</li>
+</ul>
+
+<p>Si se quiere información más detallada se usa <code>summary(fit)</code></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Obtención de un intercepto interpretable</h3>
+
+<p>Se puede escribir el modelo usando la desviación con respecto a la media (\(X-\bar{X}\)) como input.</p>
+
+<pre><code class="r">fit2 &lt;- lm(price ~ I(carat - mean(carat)), data = diamond)
+coef(fit2)
+</code></pre>
+
+<pre><code>           (Intercept) I(carat - mean(carat)) 
+              500.0833              3721.0249 
+</code></pre>
+
+<p>Entonces $500.1 es el precio esperado para un diamante de peso promedio que en el caso de los datos corresponde a 0.2041667 quilates.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Cambio de escala</h3>
+
+<ul>
+<li>Un incremento de 1 quilate es muy grande, ¿qué se esperaría si el peso aumenta 1/10 quilates?</li>
+<li>Se puede dividir el coeficiente por 10.</li>
+<li>Se espera un aumento de 372.102 dólares de Singapur en el precio por cada  1/10 quilates que aumenta el precio.</li>
+<li>Esto es lo mismo que cambiar la escala de \(X\) y ajustar la regresión</li>
+</ul>
+
+<pre><code class="r">fit3 &lt;- lm(price ~ I(carat * 10), data = diamond)
+coef(fit3)
+</code></pre>
+
+<pre><code>  (Intercept) I(carat * 10) 
+    -259.6259      372.1025 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Predicción del precio de un diamante</h3>
+
+<p>Supongamos que tenemos tres diamantes cuyos pesos son 0.16, 0,27 y 0,34 quilates. La estimación de su precio se obtiene de la siguiente forma:</p>
+
+<pre><code class="r">newx &lt;- c(0.16, 0.27, 0.34)
+predict(fit, newdata = data.frame(carat = newx))
+</code></pre>
+
+<pre><code>        1         2         3 
+ 335.7381  745.0508 1005.5225 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Ejemplo: Base de datos <code>diamond</code> (6)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Gráfico para interpretar la regresión</h3>
+
+<!-- * Valores observados de los $X$ de la base de datos $\rightarrow$ color azul
+* Valores esperados de los $X$ de la base de datos $\rightarrow$ color rojo
+* Valores estimados de los $X$ nuevos (los 3 diamantes de la parte anterior) $\rightarrow$  líneas rectas -->
+
+<div class="rimage center"><img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Regresión usando ANOVA (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Preguntas: </p>
+
+<ul>
+<li>¿Es más económico un automóvil automático o uno mecánico?</li>
+<li>¿Qué variables pueden explicar el rendimiento de un automóvil?</li>
+</ul>
+
+<p>Usaremos la base de datos <code>mtcars</code> que viene en la librería <code>datasets</code>. La base contiene información sobre el rendimiento (millas por galón) y características (peso, transmisión, cilindros, etc ) de varios modelos de automóviles.</p>
+
+<p>Para ver las variables de la base de datos:</p>
+
+<pre><code class="r">library(datasets) 
+data(mtcars) 
+str(mtcars)
+head(mtcars, n=5)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Regresión usando ANOVA (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>ANOVA explica las fuentes de variabilidad. Para evaluar la interacción de <code>mpg</code> con las demás variables usamos <code>analysis &lt;- aov(mpg ~ ., data = mtcars); summary(analysis)</code></p>
+
+<pre><code>            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+cyl          1  817.7   817.7 116.425 5.03e-10 ***
+disp         1   37.6    37.6   5.353  0.03091 *  
+hp           1    9.4     9.4   1.334  0.26103    
+drat         1   16.5    16.5   2.345  0.14064    
+wt           1   77.5    77.5  11.031  0.00324 ** 
+qsec         1    3.9     3.9   0.562  0.46166    
+vs           1    0.1     0.1   0.018  0.89317    
+am           1   14.5    14.5   2.061  0.16586    
+gear         1    1.0     1.0   0.138  0.71365    
+carb         1    0.4     0.4   0.058  0.81218    
+Residuals   21  147.5     7.0                     
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Regresión usando ANOVA (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Modelo 1</h3>
+
+<p>Estimaremos el siguiente modelo considerando los datos de la tabla ANOVA:
+\[
+MPG_i = \beta_0 + \beta_1 CYL_i + \beta_2 DISP_i + \beta_3 WT_i + \beta_4 AM_i + \varepsilon_i
+\]</p>
+
+<pre><code class="r">fit1 &lt;- lm(mpg ~ cyl + disp + wt + am, data = mtcars)
+coefficients(fit1)
+</code></pre>
+
+<pre><code> (Intercept)          cyl         disp           wt           am 
+40.898313414 -1.784173258  0.007403833 -3.583425472  0.129065571 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Regresión usando ANOVA (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Modelo 1</h3>
+
+<p>Usando <code>summary(fit1)</code></p>
+
+<pre><code>Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 40.898313   3.601540  11.356 8.68e-12 ***
+cyl         -1.784173   0.618192  -2.886  0.00758 ** 
+disp         0.007404   0.012081   0.613  0.54509    
+wt          -3.583425   1.186504  -3.020  0.00547 ** 
+am           0.129066   1.321512   0.098  0.92292    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</code></pre>
+
+<p>\(\Rightarrow\) no se debe incluir la variable <code>disp</code>.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Regresión usando ANOVA (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Modelo 2</h3>
+
+<p>Estimaremos el siguiente modelo considerando la significancia de las variables:
+\[
+MPG_i = \beta_0 + \beta_1 CYL_i + \beta_2 WT_i + \beta_3 AM_i + \varepsilon_i
+\]</p>
+
+<pre><code class="r">fit2 &lt;- lm(mpg ~ cyl + wt + am, data = mtcars)
+coefficients(fit2)
+</code></pre>
+
+<pre><code>(Intercept)         cyl          wt          am 
+ 39.4179334  -1.5102457  -3.1251422   0.1764932 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Ejercicio</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Escriba un informe de no más de 2 páginas junto a su grupo de trabajo (los mismos del proyecto de curso) en el que se responda claramente:</p>
+
+<ul>
+<li>¿Cuáles son las variables más importantes para explicar la variable MPG en distintos modelos de automóviles?</li>
+<li>¿Cuál de los dos modelos de la parte anterior es mejor y por qué?</li>
+<li>¿Se puede decir que la variable AM (tipo de transmisión) explica la variable MPG en distintos modelos de automóviles? </li>
+<li>Comente los alcances y limitaciones del modelo en base a los datos disponibles y los supuestos de OLS</li>
+</ul>
+
+<p>Indicaciones:</p>
+
+<ul>
+<li>Use argumentos estadísticos y argumentos teóricos en base a prensa especializada</li>
+<li>Presente sus resultados en un lenguaje simple y formal</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio (Parcial)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Para comparar los modelos vamos a testear si el modelo extendido tiene mayor poder predictivo que el modelo reducido. Se tiene \(H_0: \beta_{\text{disp}} = 0\) y el estadístico es \[F = \frac{(\text{SSE}_{\text{reduced}} - \text{SSE}_{\text{extended}})/(p-k)}{\text{SSE}_{\text{extended}}/(n-p-1)}\]</p>
+
+<pre><code class="r">anova(fit2, fit1, test = &quot;F&quot;)
+</code></pre>
+
+<pre><code>Analysis of Variance Table
+
+Model 1: mpg ~ cyl + wt + am
+Model 2: mpg ~ cyl + disp + wt + am
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     28 191.05                           
+2     27 188.43  1    2.6212 0.3756 0.5451
+</code></pre>
+
+<p>\(\Rightarrow\) no hay evidencia para decir que es preferible el modelo extendido.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Modelo de Regresión Básico'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Interpretación de los coeficientes (1)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Interpretación de los coeficientes (2)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Interpretación de los coeficientes (3)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Ejemplo: Base de datos <code>diamond</code> (1)'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Ejemplo: Base de datos <code>diamond</code> (2)'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Ejemplo: Base de datos <code>diamond</code> (3)'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Ejemplo: Base de datos <code>diamond</code> (4)'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Ejemplo: Base de datos <code>diamond</code> (5)'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Ejemplo: Base de datos <code>diamond</code> (5)'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Ejemplo: Base de datos <code>diamond</code> (6)'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Regresión usando ANOVA (1)'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Regresión usando ANOVA (2)'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Regresión usando ANOVA (3)'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Regresión usando ANOVA (4)'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Regresión usando ANOVA (5)'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Ejercicio'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Desarrollo Ejercicio (Parcial)'>
+         18
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="../../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

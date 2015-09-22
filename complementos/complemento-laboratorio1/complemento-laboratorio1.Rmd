@@ -1,0 +1,17 @@
+---
+title: "Complemento Laboratorio Nº1"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+
+Ejemplos de matrices y mínimos cuadrados en Excel: <a href="http://pachamaltese.github.io/analisis-de-datos-unab/complementos/complemento-laboratorio1/matrices-mco.xlsx">matrices-mco.xlsx</a>

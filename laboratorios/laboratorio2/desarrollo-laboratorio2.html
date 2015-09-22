@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Desarrollo Laboratorio Nº2</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Desarrollo Laboratorio Nº2">
+  <meta name="author" content="">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../../libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../../libraries/frameworks/io2012/js/slides" 
+    src="../../libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="../../assets/img/logounab.png">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Desarrollo Laboratorio Nº2</h1>
+    <h2>Análisis de Datos</h2>
+    <p>Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas<br/>Profesor Ayudante de Laboratorio: Mauricio Vargas<br/>Ayudantes: Franco Mansilla y Mauricio Díaz<br/><br/>Universidad Nacional Andrés Bello</p>
+  </hgroup>
+  <article></article>  
+  <footer class = 'license'>
+    <a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+    </a>
+  </footer>
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Pregunta 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Considere el vector</p>
+
+<pre><code class="r">x &lt;- c(0.18, -1.54, 0.42, 0.95)
+</code></pre>
+
+<p>y los ponderadores</p>
+
+<pre><code class="r">w &lt;- c(2, 1, 3, 1)
+</code></pre>
+
+<p>Encuentre el valor de \(\mu\) que minimiza la ecuación de mínimos cuadrados \(\Sigma_{i=1}^n w_i(x_i-\mu)^2\). Hágalo de las siguientes formas:</p>
+
+<ol>
+<li>Algebraicamente</li>
+<li>En Excel (descargar <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio2/laboratorio2-pregunta1.xlsx">datos</a> en Excel)</li>
+<li>En R</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 1 (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Algebraicamente</h3>
+
+<p>Sea \(S = \displaystyle\Sigma_{i=1}^n w_i(x_i-\mu)^2\)</p>
+
+<p>\(S = \displaystyle\Sigma_{i=1}^n w_i(x_i^2-2x_i\mu+\mu^2)\)</p>
+
+<p>\(S = \displaystyle\Sigma_{i=1}^n w_ix_i^2 -2\mu\displaystyle\Sigma_{i=1}^n w_ix_i +\mu^2\displaystyle\Sigma_{i=1}^n w_i\)</p>
+
+<p>\(\displaystyle \frac{dS}{d\mu} = 0 \Leftrightarrow -2\displaystyle\Sigma_{i=1}^n w_ix_i +2\mu^* \displaystyle\Sigma_{i=1}^n w_i = 0\) </p>
+
+<p>\(\displaystyle \frac{dS}{d\mu} = 0 \Leftrightarrow \mu^* = \frac{\Sigma_{i=1}^n w_ix_i}{\Sigma_{i=1}^n w_i}\)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 1 (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Excel</h3>
+
+<p>Descargar <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio2/laboratorio2-desarrollo-pregunta1.xlsx">solución</a> en Excel.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 1 (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3><code>R</code></h3>
+
+<p>El promedio ponderado se obtiene con el siguiente comando</p>
+
+<pre><code class="r">weighted.mean(x, w) # 0.1471
+</code></pre>
+
+<pre><code>## [1] 0.1471429
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Pregunta 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Considere los siguientes vectores de datos</p>
+
+<pre><code class="r">x &lt;- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
+y &lt;- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)
+</code></pre>
+
+<p>Estime una regresión desde el origen y obtenga la pendiente considerando \(y\) como la variable dependiente y \(x\) como la variable independiente. ¿Cómo cambia su resultado si estima un modelo con constante?</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Regresión tal que \(\beta_0\) pasa por el origen</p>
+
+<pre><code class="r">fit.sc &lt;- lm(y ~ x - 1) #modelo sin constante
+coefficients(fit.sc) # 0.8263
+</code></pre>
+
+<pre><code>##         x 
+## 0.8262517
+</code></pre>
+
+<pre><code class="r">fit.c &lt;- lm(y ~ x) #modelo con constante
+coefficients(fit.c) #-1.713
+</code></pre>
+
+<pre><code>## (Intercept)           x 
+##    1.567461   -1.712846
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Pregunta 3</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usando la base de datos mtcars estime un modelo que considere mpg como variable dependiente y la weight como variable independiente.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 3</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">data(mtcars) #para cargar la librería en memoria
+fit &lt;- lm(mpg ~ wt, mtcars)
+coefficients(fit)
+</code></pre>
+
+<pre><code>## (Intercept)          wt 
+##   37.285126   -5.344472
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Pregunta 4 (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>A partir del archivo Excel utilizado en el Laboratorio 1 (<a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio1/laboratorio1.xlsx">laboratorio1.xlsx</a>) obtenga las mismas regresiones (con y sin constante) utilizando R. Para esto siga los siguientes pasos:</p>
+
+<h3>Definir variables en memoria y cargar librerías</h3>
+
+<ul>
+<li>Definir el directorio de trabajo.</li>
+<li><p>Instalar una librería que permita leer archivos XLSX. Usaremos XLConnect cuya documentación se puede ver en <a href="https://cran.r-project.org/web/packages/XLConnect/XLConnect.pdf"><a href="https://cran.r-project.org/web/packages/XLConnect/XLConnect.pdf">https://cran.r-project.org/web/packages/XLConnect/XLConnect.pdf</a></a>.</p></li>
+<li><p>Cargar la librería XLConnect.</p></li>
+<li><p>Leer el archivo del Laboratorio 1.</p></li>
+<li><p>Asignar nombres <b>simples</b> a las columnas (\(y\), \(x_1\), \(x_2\)).</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Pregunta 4 (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Haga un gráfico de cada variable explicativa sobre la explicada</h3>
+
+<ul>
+<li>Instalar y cargar en memoria ggplot (librería para graficar)</li>
+<li>Graficar \(y\) versus \(x_1\) e \(y\) versus \(x_2\).</li>
+<li>Ver la correlación entre las variables.</li>
+</ul>
+
+<h3>Calcule el estimador de los parámetros.</h3>
+
+<ul>
+<li>Hacer una correlación sin constante.</li>
+<li>Hacer una correlación con constante</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 4 (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">#1. Definir variables en memoria y cargar librerías
+    #Definir el directorio de trabajo
+    dir &lt;- &quot;/Users/pacha/analisis-de-datos-unab/laboratorios/laboratorio1&quot;
+
+    #Instalar una librería que permita leer archivos XLSX
+    #install.packages(&quot;XLConnect&quot;)
+
+    #Cargar la librería XLConnect
+    library(XLConnect)
+
+    #Leer el archivo del Laboratorio 1
+    file &lt;- paste0(dir,&quot;/laboratorio1.xlsx&quot;)
+    data &lt;- readWorksheetFromFile(file, sheet = &quot;Hoja1&quot;, region = &quot;A2:C20&quot;, header = FALSE)
+
+    #Asignar nombres simples a las columnas
+    colnames(data) &lt;- c(&quot;y&quot;, &quot;x1&quot;, &quot;x2&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 4 (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">#2. Haga un gráfico de cada variable explicativa sobre la explicada 
+# ¿Hay correlación entre ellas?
+
+    #Instalar y cargar en memoria ggplot (librería para graficar)
+    #install.packages(&quot;ggplot2&quot;)
+    library(ggplot2)
+
+    #Graficar y versus x1 e y versus x2
+    qplot(x1, y, data=data)
+    qplot(x2, y, data=data)
+
+    #Ver la correlación entre las variables
+    cor(data)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 4 (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3><code>qplot(x1, y, data=data); qplot(x2, y, data=data)</code></h3>
+
+<p><img src="assets/fig/unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 4 (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3><code>cor(data)</code></h3>
+
+<pre><code>##             y         x1         x2
+## y   1.0000000 -0.8911151 -0.8284953
+## x1 -0.8911151  1.0000000  0.7270866
+## x2 -0.8284953  0.7270866  1.0000000
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Pregunta 4 (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">#3. Calcule el estimador de los parámetros
+
+    #Convertir a data.frame y hacer una regresión sin constante
+    data &lt;- as.data.frame(data); fit1 &lt;- lm(y ~ x1 + x2 -1, data=data); coefficients(fit1) 
+</code></pre>
+
+<pre><code>##         x1         x2 
+## -2.0501132  0.2148756
+</code></pre>
+
+<pre><code class="r">    #Hacer una regresión con constante
+    fit2 &lt;- lm(y ~ x1 + x2, data=data); coefficients(fit2)
+</code></pre>
+
+<pre><code>## (Intercept)          x1          x2 
+## 22.22048141 -1.40916785 -0.08606443
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Pregunta 1'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Desarrollo Pregunta 1 (1)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Desarrollo Pregunta 1 (2)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Desarrollo Pregunta 1 (3)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Pregunta 2'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Desarrollo Pregunta 2'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Pregunta 3'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Desarrollo Pregunta 3'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Pregunta 4 (1)'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Pregunta 4 (2)'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Desarrollo Pregunta 4 (1)'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Desarrollo Pregunta 4 (2)'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Desarrollo Pregunta 4 (3)'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Desarrollo Pregunta 4 (4)'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Desarrollo Pregunta 4 (5)'>
+         15
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="../../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

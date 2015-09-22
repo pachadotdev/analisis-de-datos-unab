@@ -1,0 +1,167 @@
+---
+title: "Complemento Laboratorio Nº5"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+
+##Ejercicio
+A partir del modelo con mejor ajuste del <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorio5/desarrollo-laboratorio5.html">Laboratorio Nº5</a> anterior obtenga:
+
+* Predicción del output
+* Productividad marginal
+* Razón técnica de sustitución
+* Elasticidad producto-factor
+* Elasticidad de escala
+* Razón técnica relativa de sustitución
+* Tamaño óptimo de planta
+
+## Algunas definiciones
+
+Productividad marginal
+$$MP_{i} = \frac{\partial y}{\partial x_i}$$
+
+Razón técnica de sustitución
+$$TRS_{i,j} = \frac{MP_{i}}{MP_{j}}$$
+
+Elasticidad producto-factor
+$$
+\epsilon_i = \frac{\partial \ln (y)}{\partial \ln(x_i)} = \beta_i + \sum_{j=1}^n \beta_{ij} \ln(x_j)
+$$
+
+Elasticidad de escala
+$$
+\mathcal{E} = \sum_{i=1}^n \epsilon_i
+$$
+
+Razón técnica relativa de sustitución
+$$RTRS_{i,j} = \frac{\epsilon_{i}}{\epsilon_{j}}$$
+
+Tener en cuenta que
+$$
+\frac{\partial \ln(y)}{\partial \ln(x_i)} = \frac{\Delta y}{y} \frac{x_i}{\Delta x_i} \: \Longrightarrow \:
+MP_i = \frac{\partial y}{\partial x_i} = \frac{y}{x_i} \frac{\partial \ln(y)}{\partial \ln(x_i)} = \frac{y}{x_i}\epsilon_i
+$$
+
+Lo más eficiente es proceder en el siguiente orden:
+
+* Elasticidad producto-factor
+* Elasticidad de escala
+* Tamaño óptimo de planta
+* Productividad marginal
+* Razón técnica de sustitución
+* Razón técnica relativa de sustitución
+
+## Función con mejor ajuste
+A partir de los test realizados en el laboratorio la función que mejor representa el proceso de producción es:
+$$\ln y = \beta_0 + \sum_i \beta_i \ln x_i + \frac{1}{2} \sum_i \sum_j \beta_{ij} \ln x_i \ln x_j$$
+
+## Estimación de parámetros
+
+```{r}
+library("miscTools")
+library("lmtest")
+
+data("appleProdFr86", package = "micEcon")
+data <- appleProdFr86
+rm(appleProdFr86)
+
+data$qCap <- data$vCap/data$pCap
+data$qLab <- data$vLab/data$pLab
+data$qMat <- data$vMat/data$pMat
+```
+```{r}
+prodTL <- lm(log(qOut) ~ log(qCap) + log(qLab) + log(qMat) + I(0.5*log(qCap)^2) 
+             + I(0.5*log(qLab)^2) + I(0.5*log(qMat)^2) + I(log(qCap)*log(qLab))
+             + I(log(qCap)*log(qMat)) + I(log(qLab)*log(qMat)), data = data)
+```
+
+## Predicción del output
+```{r}
+data$qOutTL <- exp(fitted(prodTL))
+compPlot(data$qOut, data$qOutTL, log = "xy", col="gray50")  
+```
+
+## Elasticidad producto-factor
+```{r, fig.width=10}
+b1 <- coef(prodTL)["log(qCap)"]
+b2 <- coef(prodTL)["log(qLab)"]
+b3 <- coef(prodTL)["log(qMat)"]
+b11 <- coef(prodTL)["I(0.5 * log(qCap)^2)"]
+b22 <- coef(prodTL)["I(0.5 * log(qLab)^2)"]
+b33 <- coef(prodTL)["I(0.5 * log(qMat)^2)"]
+b12 <- b21 <- coef(prodTL)["I(log(qCap) * log(qLab))"]
+b13 <- b31 <- coef(prodTL)["I(log(qCap) * log(qMat))"]
+b23 <- b32 <- coef(prodTL)["I(log(qLab) * log(qMat))"] 
+
+data$eCapTL <- with(data, b1 + b11*log(qCap) + b12*log(qLab) + b13*log(qMat))
+data$eLabTL <- with(data, b2 + b21*log(qCap) + b22*log(qLab) + b23*log(qMat))
+data$eMatTL <- with(data, b3 + b31*log(qCap) + b32*log(qLab) + b33*log(qMat))
+data <- data[data$eCapTL >= 0 & data$eLabTL >= 0 & data$eMatTL >= 0,]
+par(mfrow=c(1,3)); hist(data$eCapTL); hist(data$eLabTL); hist(data$eMatTL)
+```
+
+## Elasticidad de escala
+```{r}
+data$eScaleTL <- data$eCapTL + data$eLabTL + data$eMatTL
+hist(data$eScaleTL)
+```
+
+## Tamaño óptimo de planta (en base a elasticidad de escala)
+```{r}
+plot(data$qOut, data$eScaleTL, log = "x")
+```
+
+## Productividad marginal
+```{r, fig.width=10}
+data$mpCapTL <- with(data, eCapTL * qOutTL / qCap)
+data$mpLabTL <- with(data, eLabTL * qOutTL / qLab)
+data$mpMatTL <- with(data, eMatTL * qOutTL / qMat)
+par(mfrow=c(1,3)); hist(data$mpCapTL); hist(data$mpLabTL); hist(data$mpMatTL)
+```
+
+Que la productividad marginal sea negativa es un indicio de mala especificación del modelo. Se verán los detalles sobre esto en los laboratorios siguientes.
+
+## Razón técnica de sustitución
+```{r}
+data$mrtsCapLabTL <- with(data, - mpCapTL / mpLabTL)
+data$mrtsLabCapTL <- with(data, - mpLabTL / mpCapTL)
+data$mrtsCapMatTL <- with(data, - mpCapTL / mpMatTL)
+data$mrtsMatCapTL <- with(data, - mpMatTL / mpCapTL)
+data$mrtsLabMatTL <- with(data, - mpLabTL / mpMatTL)
+data$mrtsMatLabTL <- with(data, - mpMatTL / mpLabTL)
+
+par(mfrow=c(2,3)); hist(data$mrtsCapLabTL); hist(data$mrtsLabCapTL); hist(data$mrtsCapMatTL); 
+hist(data$mrtsMatCapTL); hist(data$mrtsLabMatTL); hist(data$mrtsMatLabTL)
+```
+
+## Razón técnica relativa de sustitución
+```{r}
+data$rmrtsCapLabTL <- with(data, - eCapTL / eLabTL)
+data$rmrtsLabCapTL <- with(data, - eLabTL / eCapTL)
+data$rmrtsCapMatTL <- with(data, - eCapTL / eMatTL)
+data$rmrtsMatCapTL <- with(data, - eMatTL / eCapTL)
+data$rmrtsLabMatTL <- with(data, - eLabTL / eMatTL)
+data$rmrtsMatLabTL <- with(data, - eMatTL / eLabTL)
+
+par(mfrow=c(2,3)); hist(data$rmrtsCapLabTL); hist(data$rmrtsLabCapTL); hist(data$rmrtsCapMatTL); 
+hist(data$rmrtsMatCapTL); hist(data$rmrtsLabMatTL); hist(data$rmrtsMatLabTL)
+```
+
+## Tamaño óptimo de planta
+
+Se puede observar empíricamente
+```{r}
+plot(data$qOut, data$eScale, log = "x" )
+hist(data$qOut, breaks = 100, main = "", xlim = c(0,5000000))
+```
+
