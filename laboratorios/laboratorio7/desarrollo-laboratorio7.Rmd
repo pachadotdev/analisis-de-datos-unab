@@ -1,0 +1,511 @@
+---
+title: "Desarrollo Laboratorio Nº7"
+subtitle: Análisis de Datos
+author1: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas"
+author2: "Profesor Ayudante de Laboratorio: Mauricio Vargas"
+author3: "Ayudantes: Franco Mansilla y Mauricio Díaz"
+job: "Universidad Nacional Andrés Bello"
+logo: logounab.png
+license : by-nc-sa
+hitheme: tomorrow
+framework: io2012
+highlighter: highlight.js
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+<!-- knit : slidify::knit2slides --> 
+knit : slidify::knit2slides
+
+---
+
+```{r setup, cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE}
+library(knitr) 
+options(width = 100)
+opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+
+options(xtable.type = 'html')
+knit_hooks$set(inline = function(x) {
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+knit_hooks$set(plot = knitr:::hook_plot_html)
+```
+
+## Aplicaciones de OLS en finanzas (1)
+
+<b>Lo que veremos</b>
+
+* Una de las aplicaciones más elementales y útiles de los modelos lineales en finanzas es en la valoración de activos de capital.
+* Los ejercicios de este laboratorio están desarrollados sobre la base de la versión simple del modelo CAPM desarrollado a principios de los años sesenta.
+* En ningún caso lo que veremos corresponde a los desarrollos actuales de la teoría financiera.
+* Los alcances, limitaciones y supuestos del modelo se pueden consultar en los textos de referencia.
+
+<b>Lo que no veremos</b>
+
+* Incluso los modelos elementales en Finanzas pueden adquirir mayor complejidad si se trabajan utilizando series de tiempo.
+* En el complemento se verá un poco acerca de este tópico ya que la estacionalidad de los datos y la dependencia entre observaciones ordenadas temporalmente no puede ignorarse.
+
+---
+
+## Aplicaciones de OLS en finanzas (2)
+
+<b>Referencias</b>
+
+Bodie, Z., & Merton, R. C. (2003). <a href="http://catalogo.unab.cl/client/es_ES/inicio/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:109397/ada;jsessionid=15535683C81D16E98E28ECBC97C4B547?qu=finanzas">Finanzas</a>. Pearson Educación.
+
+Ross, S. A., Westerfield, R. W., & Jaffe, J. F. (2000). <a href="http://catalogo.unab.cl/client/es_ES/inicio/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:32143/ada?qu=finanzas">Finanzas corporativas</a>. Mc Graw Hill.
+
+Disponibles en biblioteca
+
+---
+
+## Aplicaciones de OLS en finanzas (3)
+
+Ecuación de CAPM:
+
+$r_i = r_f + \beta_i [r_m - r_f] + e_i$
+
+Línea de mercado de capitales:
+
+$\overline{r_p} = r_f + \frac{\overline{r_m}-r_f}{\sigma_m}\cdot \sigma_p$
+
+Frontera de portafolios eficientes:
+
+$\overline{r_p} = k + \frac{dr}{d\sigma}\cdot \sigma_p$
+
+Consideraciones: 
+
+* Se trabaja en los espacios $(\sigma_p,\bar{r}_p)$ y $(\bar{r}_m, \bar{r}_i)$
+* En el contexto de CAPM el beta se puede expresar como $\frac{\sigma_{i,m}}{\sigma_m^2}$
+* La desviación estándar mide la volatilidad y el beta mide el riesgo
+
+---
+
+## Aplicaciones de OLS en finanzas (4)
+
+Notación:
+
+* $r_a$: retorno de $a$
+* $\sigma_{a,b}$: covarianza entre $a$ y $b$ 
+
+Consideraciones:
+
+* Se puede formar un portafolio $p$ combinando el portafolio de mercado (riesgoso) $m$ y el activo libre de riesgo $f$
+* El retorno de la acción $i$ se explica a partir del retorno del portafolio de mercado $m$
+* La tasa libre de riesgo adecuada es igual a la tasa libre de riesgo de los EEUU más el premio por riesgo país
+
+---
+
+## Aplicaciones de OLS en finanzas (5)
+
+Retorno esperado: Se invierte $a\%$ en un activo riesgoso y $(1-a)\%$ en el portafolio de mercado:
+
+$\overline{r}(a) = a\overline{r_i} + (1-a)\overline{r_m} = a[\overline{r_i}-\overline{r_m}] + \overline{r_m}$
+
+Riesgo asociado:
+
+(1) $\sigma^2(a) = a^2 \sigma_i^2 + (1-a)^2\sigma_m^2 + 2a(1-a)\sigma_{i,m}$
+
+(2) $\sigma(a) = [a^2(\sigma_i^2 + \sigma_m^2  - 2\sigma_{i,m}) + 2a(\sigma_{i,m}-\sigma_m^2) + \sigma_m^2]^{1/2}$
+
+<br>
+
+Si $a = 0$ $\Longrightarrow$ $(\sigma(0),\overline{r}(0)) = (\sigma_m,\overline{r_m})$
+
+Si $a = 1$ $\Longrightarrow$ $(\sigma(1),\overline{r}(1)) = (\sigma_i,\overline{r_i})$
+
+Para calcular la pendiente se debe evaluar en $a=0$
+
+---
+
+## Aplicaciones de OLS en finanzas (6)
+
+
+Volatilidad del portafolio: 
+
+$r_i = r_f + \beta_i [r_m - r_f] + e_i$
+
+$r_i - r_f = \beta_i [r_m - r_f] + e_i \quad / \:\text{var}()$
+
+$\sigma_i^2 = \beta_i^2\sigma_m^2 + \sigma_e^2$
+
+Retorno del portafolio:
+
+$\left.\frac{dr(a)}{d\sigma(a)}\right|_{a=0} = \left.\frac{dr(a)/da}{d\sigma(a)/da}\right|_{a=0} = \frac{\overline{r_i}-\overline{r_m}}{\frac{1}{\sigma_m}\cdot (\sigma_{i,m}-\sigma_m^2)} := \frac{\overline{r_m}-r_f}{\sigma_m} \Longrightarrow  \overline{r_i} = r_f + \beta_i [\overline{r_m} - r_f]$ 
+
+---
+
+## Ejercicio 1
+
+Usando la librería `Quandl` y `ggplot2`
+
+1. Descargue las series de precios mensuales de los índices Hang Seng Index (恒生指數) y Shanghai Composite Index (上海证券交易所综合股价指) desde el 2005-01-01 hasta el 2015-09-25 y calcule los retornos mensuales de ambos índices.
+2. Construya los siguientes gráficos usando:
+ * Dos gráficos que reflejen el precio y retorno de cada índice.
+ * Un gráfico que contenga el precio de ambos índices (lleve todo a la misma moneda y compare)
+  * Un gráfico que contenga el retorno de ambos índices (¿Cuál tiene mayor volatilidad?)
+3. Verifique la normalidad de la distribución de los retornos mediante una prueba de hipotésis.
+
+---
+
+## Desarrollo Ejercicio 1 (1)
+
+Librerías necesarias
+```{r, message=FALSE}
+require(ggplot2);require(gridExtra);require(Quandl);require(reshape)
+```
+
+Descargar y guardar los datos los datos
+```{r, eval=FALSE}
+hk.df <- Quandl("YAHOO/INDEX_HSI", start_date="2005-01-01", end_date="2015-09-25", 
+                collapse="monthly", type = "raw")
+sh.df <- Quandl("YAHOO/INDEX_SSEC", start_date="2005-01-01", end_date="2015-09-25", 
+                collapse="monthly", type = "raw")
+saveRDS(hk.df, "hk.df.RData"); saveRDS(sh.df, "sh.df.RData")
+```
+
+Para trabajar adecuadamente con Quandl es preciso crear una cuenta gratuita que nos da una llave y agregar `authcode = ...` al comando `Quandl` para poder descargar los datos sin restricciones.
+
+---
+
+## Desarrollo Ejercicio 1 (2)
+
+Comienzo con el archivo del HSI (恒生指數) y ordeno los datos por fecha
+```{r, cache=TRUE}
+hk.df <- readRDS("hk.df.RData")
+colnames(hk.df)[7] <- "Adjusted.Close"
+hk.df <- hk.df[order(as.Date(hk.df$Date)),]
+```
+
+Calculo los retornos mensuales
+```{r}
+hk.Adjusted.Close <- hk.df$Adjusted.Close
+hk.Return <- diff(hk.Adjusted.Close)/hk.Adjusted.Close[-length(hk.Adjusted.Close)]
+hk.Return <- c(NA,hk.Return)
+hk.df$Return <- hk.Return
+hk.df <- na.omit(hk.df)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (3)
+
+Precio y retorno del HSI (恒生指數)
+
+```{r, eval=FALSE}
+g1 <- ggplot(hk.df)
+g1 <- g1 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
+g1 <- g1 + labs(title = "Hang Seng Index", x = "Date", y = "Nominal Price (HKD)")
+
+g2 <- ggplot(hk.df)
+g2 <- g2 + geom_line(aes(x = Date, y = Return), col="darkblue")
+g2 <- g2 + labs(title = "", x = "Date", y = "Monthly Return (%)")
+
+grid.arrange(g1, g2, nrow=2)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (4)
+
+Precio y retorno del HSI (恒生指數)
+
+```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+g1 <- ggplot(hk.df)
+g1 <- g1 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
+g1 <- g1 + labs(title = "Hang Seng Index", x = "Date", y = "Nominal Price (HKD)")
+
+g2 <- ggplot(hk.df)
+g2 <- g2 + geom_line(aes(x = Date, y = Return), col="darkblue")
+g2 <- g2 + labs(title = "", x = "Date", y = "Monthly Return (%)")
+
+grid.arrange(g1, g2, nrow=2)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (5)
+
+Ordeno los datos del Shanghai Composite Index (上海证券交易所综合股价指) por fecha
+```{r}
+sh.df <- readRDS("sh.df.RData")
+colnames(sh.df)[7] <- "Adjusted.Close"
+sh.df <- sh.df[order(as.Date(sh.df$Date)),]
+```
+
+Calculo los retornos
+```{r}
+sh.Adjusted.Close <- sh.df$Adjusted.Close
+sh.Return <- diff(sh.Adjusted.Close)/sh.Adjusted.Close[-length(sh.Adjusted.Close)]
+sh.Return <- c(NA,sh.Return)
+sh.df$Return <- sh.Return
+sh.df <- na.omit(sh.df)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (6)
+
+Precio y retorno del Shanghai Composite Index (上海证券交易所综合股价指)
+```{r, eval=FALSE}
+g3 <- ggplot(sh.df)
+g3 <- g3 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
+g3 <- g3 + labs(title = "Shanghai Composite Index", x = "Date", y = "Nominal Price (CNY)")
+
+g4 <- ggplot(sh.df)
+g4 <- g4 + geom_line(aes(x = Date, y = Return), col="darkblue")
+g4 <- g4 + labs(title = "", x = "Date", y = "Monthly Return (%)")
+
+grid.arrange(g3, g4, nrow=2)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (7)
+
+Precio y retorno del Shanghai Composite Index (上海证券交易所综合股价指)
+```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+g3 <- ggplot(sh.df)
+g3 <- g3 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
+g3 <- g3 + labs(title = "Shanghai Composite Index", x = "Date", y = "Nominal Price (CNY)")
+
+g4 <- ggplot(sh.df)
+g4 <- g4 + geom_line(aes(x = Date, y = Return), col="darkblue")
+g4 <- g4 + labs(title = "", x = "Date", y = "Monthly Return (%)")
+
+grid.arrange(g3, g4, nrow=2)
+```
+
+---
+
+## Desarrollo Ejercicio 1 (8)
+
+Comparación de precios y retornos de ambos índices
+
+```{r, eval=FALSE}
+hk.Adjusted.Close <- hk.df[,c("Date","Adjusted.Close")]
+sh.Adjusted.Close <- sh.df[,c("Date","Adjusted.Close")]
+sh.Adjusted.Close$Adjusted.Close <- sh.Adjusted.Close$Adjusted.Close * 1.21
+hk.sh.prices <- merge(hk.Adjusted.Close, sh.Adjusted.Close, by='Date')
+colnames(hk.sh.prices) <- c("Date","hk.Adjusted.Close","sh.Adjusted.Close")
+
+hk.sh.prices.melt <- melt(hk.sh.prices, id="Date")  # convert to long format
+
+g5 <- ggplot(data=hk.sh.prices.melt, aes(x=Date, y=value, colour=variable))
+g5 <- g5 + geom_line()
+g5 <- g5 + scale_color_manual("Index",labels = c("HSI", "SCI"), values = c("royalblue",
+                                                                           "darkred"))
+g5 <- g5 + labs(title="Index Comparison", x="Date", y="Adjusted Close (HKD)")
+g5
+```
+
+---
+
+## Desarrollo Ejercicio 1 (9)
+
+Comparación de precios y retornos de ambos índices
+
+```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+hk.Adjusted.Close <- hk.df[,c("Date","Adjusted.Close")]
+sh.Adjusted.Close <- sh.df[,c("Date","Adjusted.Close")]
+sh.Adjusted.Close$Adjusted.Close <- sh.Adjusted.Close$Adjusted.Close * 1.21
+hk.sh.prices <- merge(hk.Adjusted.Close, sh.Adjusted.Close, by='Date')
+colnames(hk.sh.prices) <- c("Date","hk.Adjusted.Close","sh.Adjusted.Close")
+
+hk.sh.prices.melt <- melt(hk.sh.prices, id="Date")  # convert to long format
+
+g5 <- ggplot(data=hk.sh.prices.melt, aes(x=Date, y=value, colour=variable))
+g5 <- g5 + geom_line()
+g5 <- g5 + scale_color_manual("Index",labels = c("HSI", "SCI"), values = c("royalblue", "darkred"))
+g5 <- g5 + labs(title="Index Comparison", x="Date", y="Adjusted Close (HKD)")
+g5
+```
+
+---
+
+## Desarrollo Ejercicio 1 (10)
+
+Prueba de normalidad (Shapiro-Wilk ya que Kolmogorov-Smirov requiere continuidad en la distribución)
+
+```{r, eval=FALSE}
+shapiro.test(hk.df$Return)
+shapiro.test(sh.df$Return)
+
+    Shapiro-Wilk normality test
+data:  hk.df
+W = 0.96565, p-value = 0.002472
+
+data:  sh.df$Return
+W = 0.98541, p-value = 0.1878
+```
+
+---
+
+## Desarrollo Ejercicio 1 (11)
+
+Comparación de los retornos del HSI y el SCI 
+
+```{r, eval=FALSE}
+hk.Return <- hk.df[,c("Date","Return")]
+sh.Return <- sh.df[,c("Date","Return")]
+hk.sh.returns <- merge(hk.Return, sh.Return, by='Date')
+hk.sh.returns <- hk.sh.returns[hk.sh.returns$Date > "2014-12-31",]
+colnames(hk.sh.returns) <- c("Date","hk.Return","sh.Return")
+
+hk.sh.returns.melt <- melt(hk.sh.returns, id="Date")  # convert to long format
+g10 <- ggplot(data=hk.sh.returns.melt, aes(x=Date, y=value, colour=variable))
+g10 <- g10 + geom_point() + geom_line()
+g10 <- g10 + scale_color_manual("Index",labels = c("HSI", "SCI"), values = c("royalblue", 
+                                                                             "red"))
+g10 <- g10 + labs(title="Index Comparison", x="Date", y="Return (%)")
+g10
+```
+
+---
+
+## Desarrollo Ejercicio 1 (12)
+
+Comparación de los retornos del HSI y el SCI 
+
+```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+hk.Return <- hk.df[,c("Date","Return")]
+sh.Return <- sh.df[,c("Date","Return")]
+hk.sh.returns <- merge(hk.Return, sh.Return, by='Date')
+hk.sh.returns <- hk.sh.returns[hk.sh.returns$Date > "2014-12-31",]
+colnames(hk.sh.returns) <- c("Date","hk.Return","sh.Return")
+
+hk.sh.returns.melt <- melt(hk.sh.returns, id="Date")  # convert to long format
+g10 <- ggplot(data=hk.sh.returns.melt, aes(x=Date, y=value, colour=variable))
+g10 <- g10 + geom_point() + geom_line()
+g10 <- g10 + scale_color_manual("Index",labels = c("HSI", "SCI"), values = c("royalblue", "red"))
+g10 <- g10 + labs(title="Index Comparison", x="Date", y="Return (%)")
+g10
+```
+
+---
+
+## Ejercicio 2
+
+Usando la librería `Quandl`y `ggplot2`:
+
+1. Descargue las series de precios mensuales de Cheung Kong Holdings Hong Kong (长江实业集团香港) para el mismo periodo que el HSI y calcule los retornos mensuales de la acción.
+2. Construya un gráfico que contenga el retorno de ambos índices (¿Cuál tiene mayor volatilidad?)
+3. Calcule el beta de CAPM de la acción por definición y usando el comando `lm` (¿Es la acción más o menos riesgosa que el portafolio de mercado?)
+
+---
+
+## Desarrollo Ejercicio 2 (1)
+
+Descargo los datos de CHK, ordeno por fecha y calculo los retornos
+```{r, eval=FALSE}
+ckh.df <- Quandl("YAHOO/HK_0001", authcode="UocFPgYgxkTyrXN4UsU9", start_date="2014-12-31", 
+                 end_date="2015-09-25", collapse="monthly", type = "raw")
+saveRDS(ckh.df,"ckh.df.RData")
+```
+
+```{r}
+ckh.df <- readRDS("ckh.df.RData")
+colnames(ckh.df)[7] <- "Adjusted.Close"
+ckh.df <- ckh.df[order(as.Date(ckh.df$Date)),]
+ckh.Adjusted.Close <- ckh.df$Adjusted.Close
+chk.Return <- diff(ckh.Adjusted.Close)/ckh.Adjusted.Close[-length(ckh.Adjusted.Close)]
+chk.Return <- c(NA,chk.Return)
+ckh.df <- na.omit(ckh.df)
+ckh.df$Return <- chk.Return
+ckh.Return <- ckh.df[,c("Date","Return")]
+```
+
+---
+
+## Desarrollo Ejercicio 2 (2)
+
+Creo un cuadro de datos con los retornos del HSI y de CKH ordenados por fecha
+```{r}
+hk.ckh.returns <- merge(hk.Return, ckh.Return, by='Date')
+hk.ckh.returns <- na.omit(hk.ckh.returns)
+colnames(hk.ckh.returns) <- c("Date","hk.Return","ckh.Return")
+```
+
+---
+
+## Desarrollo Ejercicio 2 (3)
+
+Gráfico de los retornos de HSI y CHK comparados
+```{r, eval=FALSE}
+hk.ckh.returns.melt <- melt(hk.ckh.returns, id="Date")  # convert to long format
+g11 <- ggplot(data=hk.ckh.returns.melt, aes(x=Date, y=value, colour=variable))
+g11 <- g11 + geom_point() + geom_line()
+g11 <- g11 + scale_color_manual("Variable",labels = c("HSI", "CKH"), values = c("royalblue", 
+                                                                                "red"))
+g11 <- g11 + labs(title="Index Comparison", x="Date", y="Return (%)")
+g11
+```
+
+---
+
+## Desarrollo Ejercicio 2 (4)
+
+```{r, echo=FALSE, fig.width=7, fig.height=5}
+hk.ckh.returns.melt <- melt(hk.ckh.returns, id="Date")  # convert to long format
+g11 <- ggplot(data=hk.ckh.returns.melt, aes(x=Date, y=value, colour=variable))
+g11 <- g11 + geom_point() + geom_line()
+g11 <- g11 + scale_color_manual("Variable",labels = c("HSI", "CKH"), values = c("royalblue", "red"))
+g11 <- g11 + labs(title="Index Comparison", x="Date", y="Return (%)")
+g11
+```
+
+---
+
+## Desarrollo Ejercicio 2 (5)
+
+Calculo de la tasa libre de riesgo, correlación y voldatilidad
+```{r}
+#http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html
+#http://www.bloomberg.com/markets/rates-bonds/government-bonds/us
+usa.risk.free <- 0.31/100
+hk.risk.premium <- 0.60/100
+
+hk.ckh.returns$hk.Risk.free <- usa.risk.free + hk.risk.premium
+hk.ckh.returns$hk.Risk.premium <- hk.ckh.returns$hk.Return - hk.ckh.returns$hk.Risk.free
+
+hk.Return.vector <- as.vector(hk.ckh.returns$hk.Return)
+ckh.Return.vector <- as.vector(hk.ckh.returns$ckh.Return)
+  
+cor.hk.ckh <- cov(ckh.Return.vector, hk.Return.vector)
+var.hk <- var(hk.Return.vector)
+```
+
+---
+
+## Desarrollo Ejercicio 2 (6)
+
+Estimación del riesgo de CHK respecto del HSI
+```{r, eval=FALSE}
+cor.hk.ckh/var.hk # (beta de CAPM)
+[1] 0.7745482
+
+fit <- lm(ckh.Return ~ hk.Risk.premium, data = hk.ckh.returns) 
+summary(fit)
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)  
+(Intercept)      0.03303    0.01916   1.724    0.128  
+hk.Risk.premium  0.77455    0.28027   2.764    0.028 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.05525 on 7 degrees of freedom
+Multiple R-squared:  0.5218,	Adjusted R-squared:  0.4535 
+F-statistic: 7.637 on 1 and 7 DF,  p-value: 0.02795
+```
+
+---
+
+## Tarea
+
+Descargue las series de precios del IPSA y una empresa que transa en la BCS en el mismo periodo que en los ejercicios anteriores. Replique los ejercicios anteriores con sus datos.

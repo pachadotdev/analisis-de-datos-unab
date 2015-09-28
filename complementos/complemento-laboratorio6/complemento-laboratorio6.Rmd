@@ -146,23 +146,24 @@ prodNP <- npreg(log(qOut) ~ log(qCap) + log(qLab) + log(qMat), regtype = "ll",
 summary(prodNP)
 ```
 
-Gráficos ceteris paribus (las variables no graficadas se mantienen fijas en un valor igual a su mediana)
+###Gráficos ceteris paribus 
+Las variables no graficadas se mantienen fijas en un valor igual a su mediana
 ```{r,echo=FALSE, fig.width=12, fig.height=7}
 plot(prodNP, plot.errors.method = "bootstrap")
 ```
 
-Test de significancia:
+###Test de significancia
 ```{r, message=FALSE, warning=FALSE}
 npsigtest(prodNP)
 ```
 $\Longrightarrow$ con un nivel de significancia de 10% la única variable cuyos efectos son no significativos es el capital.
 
-Histogramas de elasticidad producto-factor y elasticidad de escala en base a regresión no paramétrica
+###Histogramas de elasticidad producto-factor y elasticidad de escala en base a regresión no paramétrica
 ```{r,echo=FALSE,fig.width=12, fig.height=7}
 par(mfrow=c(2,2)); hist(gradients(prodNP)[ ,1], xlab = "Capital", main=NULL); hist(gradients(prodNP)[ ,2], xlab = "Labour", main=NULL); hist(gradients(prodNP)[ ,3], xlab = "Materials", main=NULL); hist(gradients(prodNP), xlab = "Scale", main=NULL)
 ```
 
-Relación entre tamaño de planta y elasticidad de escala
+###Relación entre tamaño de planta y elasticidad de escala
 
 ```{r,echo=FALSE,fig.width=8, fig.height=6}
 plot(data$qOut, rowSums(gradients(prodNP)), log = "x", xlab = "qOut", ylab = "eScaleNP")

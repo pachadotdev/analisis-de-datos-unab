@@ -100,14 +100,14 @@
 summary(prodQuad)$r.squared
 </code></pre>
 
-<pre><code>## [1] 0.8448983
+<pre><code>[1] 0.8448983
 </code></pre>
 
 <pre><code class="r">rSquared(data$qOut, data$qOut - data$qOutTL)
 </code></pre>
 
-<pre><code>##           [,1]
-## [1,] 0.7696638
+<pre><code>          [,1]
+[1,] 0.7696638
 </code></pre>
 
 <p>\(\Longrightarrow\) la función cuadrática tiene mejor ajuste en \(y\)</p>
@@ -126,14 +126,14 @@ summary(prodQuad)$r.squared
 <pre><code class="r">summary(prodTL)$r.squared
 </code></pre>
 
-<pre><code>## [1] 0.6295696
+<pre><code>[1] 0.6295696
 </code></pre>
 
 <pre><code class="r">rSquared(log(data$qOut), log(data$qOut) - log(data$qOutQuad))
 </code></pre>
 
-<pre><code>##           [,1]
-## [1,] 0.5481309
+<pre><code>          [,1]
+[1,] 0.5481309
 </code></pre>
 
 <p>\(\Longrightarrow\) la función translogarítmica tiene mejor ajuste en \(\ln(y)\)</p>
@@ -165,7 +165,7 @@ summary(prodQuad)$r.squared
   <article data-timings="">
     <p>En el <a href="http://pachamaltese.github.io/complementos/complemento-laboratorio5/complemento-laboratorio5.html">complemento del Laboratorio Nº5</a> vimos que algunas observaciones tienen productividad marginal negativa cuando se ajusta una función translogarítmica. El problema de esto es que hace que la elasticidad producto-factor sea negativa.</p>
 
-<p><img src="assets/fig/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4"> </p>
+<div class="rimage center"><img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" class="plot" /></div>
 
   </article>
   <!-- Presenter Notes -->
@@ -178,7 +178,7 @@ summary(prodQuad)$r.squared
   <article data-timings="">
     <p>Cuando se ajusta una función translogarítmica ocurre lo mismo</p>
 
-<p><img src="assets/fig/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"> </p>
+<div class="rimage center"><img src="fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" class="plot" /></div>
 
   </article>
   <!-- Presenter Notes -->
@@ -194,13 +194,13 @@ summary(prodQuad)$r.squared
 <pre><code class="r">with(data, sum(eCapQuad &lt; 0) + sum(eLabQuad &lt; 0) + sum(eMatQuad &lt; 0))
 </code></pre>
 
-<pre><code>## [1] 41
+<pre><code>[1] 41
 </code></pre>
 
 <pre><code class="r">with(data, sum(eCapTL &lt; 0) + sum(eLabTL &lt; 0) + sum(eMatTL &lt; 0))
 </code></pre>
 
-<pre><code>## [1] 54
+<pre><code>[1] 54
 </code></pre>
 
   </article>
@@ -217,13 +217,13 @@ summary(prodQuad)$r.squared
 <pre><code class="r">with(data, sum(qOutQuad &lt;0))
 </code></pre>
 
-<pre><code>## [1] 0
+<pre><code>[1] 0
 </code></pre>
 
 <pre><code class="r">with(data, sum(qOutTL &lt; 0))
 </code></pre>
 
-<pre><code>## [1] 0
+<pre><code>[1] 0
 </code></pre>
 
   </article>
@@ -311,13 +311,7 @@ summary(prodQuad)$r.squared
 
 <pre><code class="r">require(datasets); data(swiss)
 require(GGally); require(ggplot2)
-</code></pre>
-
-<pre><code>## Loading required package: GGally
-## Loading required package: ggplot2
-</code></pre>
-
-<pre><code class="r">g = ggpairs(swiss, lower = list(continuous = &quot;smooth&quot;), params = c(method = &quot;loess&quot;),
+g = ggpairs(swiss, lower = list(continuous = &quot;smooth&quot;), params = c(method = &quot;loess&quot;),
             axisLabels = &#39;show&#39;)
 </code></pre>
 
@@ -330,7 +324,7 @@ require(GGally); require(ggplot2)
     <h2>Profundizando modelos multivariados (3)</h2>
   </hgroup>
   <article data-timings="">
-    <p><img src="assets/fig/unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"> </p>
+    <div class="rimage center"><img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" class="plot" /></div>
 
   </article>
   <!-- Presenter Notes -->

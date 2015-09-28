@@ -14,4 +14,5 @@ mode: selfcontained # {standalone, draft}
     <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
 </a>
 
-Ejemplos de matrices y mínimos cuadrados en Excel: <a href="http://pachamaltese.github.io/analisis-de-datos-unab/complementos/complemento-laboratorio1/matrices-mco.xlsx">matrices-mco.xlsx</a>
+#Ejemplos de matrices y mínimos cuadrados en Excel
+Descargar archivo Excel: <a href="http://pachamaltese.github.io/analisis-de-datos-unab/complementos/complemento-laboratorio1/matrices-mco.xlsx">matrices-mco.xlsx</a>

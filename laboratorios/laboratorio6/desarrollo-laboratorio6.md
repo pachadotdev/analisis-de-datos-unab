@@ -19,6 +19,8 @@ mode: selfcontained # {standalone, draft}
 knit : slidify::knit2slides
 ---
 
+
+
 ## Modelos anidados (1)
 
 En el <a href="http://pachamaltese.github.io/complementos/complemento-laboratorio4/complemento-laboratorio4.html">complemento del Laboratorio Nº4</a> y el <a href="http://pachamaltese.github.io/analisis-de-datos-unab/laboratorios/laboratorio5/desarrollo-laboratorio5.html">Laboratorio Nº5</a> vimos la base de datos `appleProdFr86`. Para estos datos comparamos el ajuste de cuatro funciones de producción.
@@ -58,7 +60,7 @@ summary(prodQuad)$r.squared
 ```
 
 ```
-## [1] 0.8448983
+[1] 0.8448983
 ```
 
 ```r
@@ -66,8 +68,8 @@ rSquared(data$qOut, data$qOut - data$qOutTL)
 ```
 
 ```
-##           [,1]
-## [1,] 0.7696638
+          [,1]
+[1,] 0.7696638
 ```
 $\Longrightarrow$ la función cuadrática tiene mejor ajuste en $y$
 
@@ -82,7 +84,7 @@ summary(prodTL)$r.squared
 ```
 
 ```
-## [1] 0.6295696
+[1] 0.6295696
 ```
 
 ```r
@@ -90,8 +92,8 @@ rSquared(log(data$qOut), log(data$qOut) - log(data$qOutQuad))
 ```
 
 ```
-##           [,1]
-## [1,] 0.5481309
+          [,1]
+[1,] 0.5481309
 ```
 $\Longrightarrow$ la función translogarítmica tiene mejor ajuste en $\ln(y)$
 
@@ -110,7 +112,7 @@ $\Longrightarrow$ la función translogarítmica tiene mejor ajuste en $\ln(y)$
 
 En el <a href="http://pachamaltese.github.io/complementos/complemento-laboratorio5/complemento-laboratorio5.html">complemento del Laboratorio Nº5</a> vimos que algunas observaciones tienen productividad marginal negativa cuando se ajusta una función translogarítmica. El problema de esto es que hace que la elasticidad producto-factor sea negativa.
 
-![plot of chunk unnamed-chunk-4](assets/fig/unnamed-chunk-4-1.png) 
+<div class="rimage center"><img src="fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" class="plot" /></div>
 
 ---
 
@@ -118,7 +120,7 @@ En el <a href="http://pachamaltese.github.io/complementos/complemento-laboratori
 
 Cuando se ajusta una función translogarítmica ocurre lo mismo
 
-![plot of chunk unnamed-chunk-5](assets/fig/unnamed-chunk-5-1.png) 
+<div class="rimage center"><img src="fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" class="plot" /></div>
 
 ---
 
@@ -132,7 +134,7 @@ with(data, sum(eCapQuad < 0) + sum(eLabQuad < 0) + sum(eMatQuad < 0))
 ```
 
 ```
-## [1] 41
+[1] 41
 ```
 
 ```r
@@ -140,7 +142,7 @@ with(data, sum(eCapTL < 0) + sum(eLabTL < 0) + sum(eMatTL < 0))
 ```
 
 ```
-## [1] 54
+[1] 54
 ```
 
 ---
@@ -154,7 +156,7 @@ with(data, sum(qOutQuad <0))
 ```
 
 ```
-## [1] 0
+[1] 0
 ```
 
 ```r
@@ -162,7 +164,7 @@ with(data, sum(qOutTL < 0))
 ```
 
 ```
-## [1] 0
+[1] 0
 ```
 
 ---
@@ -210,14 +212,6 @@ Vamos a graficar la correlación y la distribución de los datos:
 ```r
 require(datasets); data(swiss)
 require(GGally); require(ggplot2)
-```
-
-```
-## Loading required package: GGally
-## Loading required package: ggplot2
-```
-
-```r
 g = ggpairs(swiss, lower = list(continuous = "smooth"), params = c(method = "loess"),
             axisLabels = 'show')
 ```
@@ -226,7 +220,7 @@ g = ggpairs(swiss, lower = list(continuous = "smooth"), params = c(method = "loe
 
 ## Profundizando modelos multivariados (3)
 
-![plot of chunk unnamed-chunk-9](assets/fig/unnamed-chunk-9-1.png) 
+<div class="rimage center"><img src="fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" class="plot" /></div>
 
 ---
 

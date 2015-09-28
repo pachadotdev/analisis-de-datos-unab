@@ -14,29 +14,34 @@ mode: selfcontained # {standalone, draft}
     <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
 </a>
 
-Se analizará el retorno del índice IPSA en base al rendimiento de dos acciones (Concha y Toro y Sudamericana de Vapores)  
+#Ejercicio
+Analizar el retorno del índice IPSA en base al rendimiento de dos acciones (Concha y Toro y Sudamericana de Vapores)  
 
 El archivo para el análisis es <a href="http://pachamaltese.github.io/analisis-de-datos-unab/complementos/complemento-laboratorio2/retornos.csv">retornos.csv</a>
+
+# Desarrollo ejercicio
+
+###Se cargan los datos en memoria
 ```{r}
 setwd("/Users/pacha/analisis-de-datos-unab/complementos/complemento-laboratorio2/")
 data <- read.csv("retornos.csv")
 str(data)
 ```
 
-Correlación entre las variables
+###Correlación entre las variables
 ```{r}
 M <- data.frame(data$IPSA, data$CONC, data$VAPO)
 cor(M)
 ```
 
-Gráficos $x$ versus $y$
+###Gráficos $x$ versus $y$
 ```{r}
 library(ggplot2)
 qplot(data$CONC, data$IPSA)
 qplot(data$VAPO, data$IPSA)
 ```
 
-Regresiones
+###Regresión
 ```{r}
 fit <- lm(data$IPSA ~ data$CONC + data$VAPO)
 summary(fit)

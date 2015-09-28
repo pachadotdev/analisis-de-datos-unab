@@ -376,7 +376,7 @@ Extienda los resultados de su regresión a la población del país.
 
 Estimadores para la población (población = país)
 
-```
+```{r, eval=FALSE}
               Estimate Std. Error t value Pr(>|t|)    
 (Intercept)  7.5348155  0.0889943   84.67   <2e-16 ***
 sexomujer   -0.2591384  0.0096771  -26.78   <2e-16 ***

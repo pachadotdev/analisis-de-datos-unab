@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Desarrollo Laboratorio Nº7</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Desarrollo Laboratorio Nº7">
+  <meta name="author" content="">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="../../libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="../../libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="../../libraries/frameworks/io2012/js/slides" 
+    src="../../libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="../../assets/img/logounab.png">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Desarrollo Laboratorio Nº7</h1>
+    <h2>Análisis de Datos</h2>
+    <p>Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas<br/>Profesor Ayudante de Laboratorio: Mauricio Vargas<br/>Ayudantes: Franco Mansilla y Mauricio Díaz<br/><br/>Universidad Nacional Andrés Bello</p>
+  </hgroup>
+  <article></article>  
+  <footer class = 'license'>
+    <a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+    </a>
+  </footer>
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><b>Lo que veremos</b></p>
+
+<ul>
+<li>Una de las aplicaciones más elementales y útiles de los modelos lineales en finanzas es en la valoración de activos de capital.</li>
+<li>Los ejercicios de este laboratorio están desarrollados sobre la base de la versión simple del modelo CAPM desarrollado a principios de los años sesenta.</li>
+<li>En ningún caso lo que veremos corresponde a los desarrollos actuales de la teoría financiera.</li>
+<li>Los alcances, limitaciones y supuestos del modelo se pueden consultar en los textos de referencia.</li>
+</ul>
+
+<p><b>Lo que no veremos</b></p>
+
+<ul>
+<li>Incluso los modelos elementales en Finanzas pueden adquirir mayor complejidad si se trabajan utilizando series de tiempo.</li>
+<li>En el complemento se verá un poco acerca de este tópico ya que la estacionalidad de los datos y la dependencia entre observaciones ordenadas temporalmente no puede ignorarse.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><b>Referencias</b></p>
+
+<p>Bodie, Z., &amp; Merton, R. C. (2003). <a href="http://catalogo.unab.cl/client/es_ES/inicio/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:109397/ada;jsessionid=15535683C81D16E98E28ECBC97C4B547?qu=finanzas">Finanzas</a>. Pearson Educación.</p>
+
+<p>Ross, S. A., Westerfield, R. W., &amp; Jaffe, J. F. (2000). <a href="http://catalogo.unab.cl/client/es_ES/inicio/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:32143/ada?qu=finanzas">Finanzas corporativas</a>. Mc Graw Hill.</p>
+
+<p>Disponibles en biblioteca</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Ecuación de CAPM:</p>
+
+<p>\(r_i = r_f + \beta_i [r_m - r_f] + e_i\)</p>
+
+<p>Línea de mercado de capitales:</p>
+
+<p>\(\overline{r_p} = r_f + \frac{\overline{r_m}-r_f}{\sigma_m}\cdot \sigma_p\)</p>
+
+<p>Frontera de portafolios eficientes:</p>
+
+<p>\(\overline{r_p} = k + \frac{dr}{d\sigma}\cdot \sigma_p\)</p>
+
+<p>Consideraciones: </p>
+
+<ul>
+<li>Se trabaja en los espacios \((\sigma_p,\bar{r}_p)\) y \((\bar{r}_m, \bar{r}_i)\)</li>
+<li>En el contexto de CAPM el beta se puede expresar como \(\frac{\sigma_{i,m}}{\sigma_m^2}\)</li>
+<li>La desviación estándar mide la volatilidad y el beta mide el riesgo</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Notación:</p>
+
+<ul>
+<li>\(r_a\): retorno de \(a\)</li>
+<li>\(\sigma_{a,b}\): covarianza entre \(a\) y \(b\) </li>
+</ul>
+
+<p>Consideraciones:</p>
+
+<ul>
+<li>Se puede formar un portafolio \(p\) combinando el portafolio de mercado (riesgoso) \(m\) y el activo libre de riesgo \(f\)</li>
+<li>El retorno de la acción \(i\) se explica a partir del retorno del portafolio de mercado \(m\)</li>
+<li>La tasa libre de riesgo adecuada es igual a la tasa libre de riesgo de los EEUU más el premio por riesgo país</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Retorno esperado: Se invierte \(a\%\) en un activo riesgoso y \((1-a)\%\) en el portafolio de mercado:</p>
+
+<p>\(\overline{r}(a) = a\overline{r_i} + (1-a)\overline{r_m} = a[\overline{r_i}-\overline{r_m}] + \overline{r_m}\)</p>
+
+<p>Riesgo asociado:</p>
+
+<p>(1) \(\sigma^2(a) = a^2 \sigma_i^2 + (1-a)^2\sigma_m^2 + 2a(1-a)\sigma_{i,m}\)</p>
+
+<p>(2) \(\sigma(a) = [a^2(\sigma_i^2 + \sigma_m^2  - 2\sigma_{i,m}) + 2a(\sigma_{i,m}-\sigma_m^2) + \sigma_m^2]^{1/2}\)</p>
+
+<p><br></p>
+
+<p>Si \(a = 0\) \(\Longrightarrow\) \((\sigma(0),\overline{r}(0)) = (\sigma_m,\overline{r_m})\)</p>
+
+<p>Si \(a = 1\) \(\Longrightarrow\) \((\sigma(1),\overline{r}(1)) = (\sigma_i,\overline{r_i})\)</p>
+
+<p>Para calcular la pendiente se debe evaluar en \(a=0\)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Aplicaciones de OLS en finanzas (6)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Volatilidad del portafolio: </p>
+
+<p>\(r_i = r_f + \beta_i [r_m - r_f] + e_i\)</p>
+
+<p>\(r_i - r_f = \beta_i [r_m - r_f] + e_i \quad / \:\text{var}()\)</p>
+
+<p>\(\sigma_i^2 = \beta_i^2\sigma_m^2 + \sigma_e^2\)</p>
+
+<p>Retorno del portafolio:</p>
+
+<p>\(\left.\frac{dr(a)}{d\sigma(a)}\right|_{a=0} = \left.\frac{dr(a)/da}{d\sigma(a)/da}\right|_{a=0} = \frac{\overline{r_i}-\overline{r_m}}{\frac{1}{\sigma_m}\cdot (\sigma_{i,m}-\sigma_m^2)} := \frac{\overline{r_m}-r_f}{\sigma_m} \Longrightarrow  \overline{r_i} = r_f + \beta_i [\overline{r_m} - r_f]\) </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Ejercicio 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usando la librería <code>Quandl</code> y <code>ggplot2</code></p>
+
+<ol>
+<li>Descargue las series de precios mensuales de los índices Hang Seng Index (恒生指數) y Shanghai Composite Index (上海证券交易所综合股价指) desde el 2005-01-01 hasta el 2015-09-25 y calcule los retornos mensuales de ambos índices.</li>
+<li>Construya los siguientes gráficos usando:
+
+<ul>
+<li>Dos gráficos que reflejen el precio y retorno de cada índice.</li>
+<li>Un gráfico que contenga el precio de ambos índices (lleve todo a la misma moneda y compare)</li>
+<li>Un gráfico que contenga el retorno de ambos índices (¿Cuál tiene mayor volatilidad?)</li>
+</ul></li>
+<li>Verifique la normalidad de la distribución de los retornos mediante una prueba de hipotésis.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Librerías necesarias</p>
+
+<pre><code class="r">require(ggplot2);require(gridExtra);require(Quandl);require(reshape)
+</code></pre>
+
+<p>Descargar y guardar los datos los datos</p>
+
+<pre><code class="r">hk.df &lt;- Quandl(&quot;YAHOO/INDEX_HSI&quot;, start_date=&quot;2005-01-01&quot;, end_date=&quot;2015-09-25&quot;, 
+                collapse=&quot;monthly&quot;, type = &quot;raw&quot;)
+sh.df &lt;- Quandl(&quot;YAHOO/INDEX_SSEC&quot;, start_date=&quot;2005-01-01&quot;, end_date=&quot;2015-09-25&quot;, 
+                collapse=&quot;monthly&quot;, type = &quot;raw&quot;)
+saveRDS(hk.df, &quot;hk.df.RData&quot;); saveRDS(sh.df, &quot;sh.df.RData&quot;)
+</code></pre>
+
+<p>Para trabajar adecuadamente con Quandl es preciso crear una cuenta gratuita que nos da una llave y agregar <code>authcode = ...</code> al comando <code>Quandl</code> para poder descargar los datos sin restricciones.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comienzo con el archivo del HSI (恒生指數) y ordeno los datos por fecha</p>
+
+<pre><code class="r">hk.df &lt;- readRDS(&quot;hk.df.RData&quot;)
+colnames(hk.df)[7] &lt;- &quot;Adjusted.Close&quot;
+hk.df &lt;- hk.df[order(as.Date(hk.df$Date)),]
+</code></pre>
+
+<p>Calculo los retornos mensuales</p>
+
+<pre><code class="r">hk.Adjusted.Close &lt;- hk.df$Adjusted.Close
+hk.Return &lt;- diff(hk.Adjusted.Close)/hk.Adjusted.Close[-length(hk.Adjusted.Close)]
+hk.Return &lt;- c(NA,hk.Return)
+hk.df$Return &lt;- hk.Return
+hk.df &lt;- na.omit(hk.df)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Precio y retorno del HSI (恒生指數)</p>
+
+<pre><code class="r">g1 &lt;- ggplot(hk.df)
+g1 &lt;- g1 + geom_line(aes(x = Date, y = Adjusted.Close), col=&quot;darkblue&quot;)
+g1 &lt;- g1 + labs(title = &quot;Hang Seng Index&quot;, x = &quot;Date&quot;, y = &quot;Nominal Price (HKD)&quot;)
+
+g2 &lt;- ggplot(hk.df)
+g2 &lt;- g2 + geom_line(aes(x = Date, y = Return), col=&quot;darkblue&quot;)
+g2 &lt;- g2 + labs(title = &quot;&quot;, x = &quot;Date&quot;, y = &quot;Monthly Return (%)&quot;)
+
+grid.arrange(g1, g2, nrow=2)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Precio y retorno del HSI (恒生指數)</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Ordeno los datos del Shanghai Composite Index (上海证券交易所综合股价指) por fecha</p>
+
+<pre><code class="r">sh.df &lt;- readRDS(&quot;sh.df.RData&quot;)
+colnames(sh.df)[7] &lt;- &quot;Adjusted.Close&quot;
+sh.df &lt;- sh.df[order(as.Date(sh.df$Date)),]
+</code></pre>
+
+<p>Calculo los retornos</p>
+
+<pre><code class="r">sh.Adjusted.Close &lt;- sh.df$Adjusted.Close
+sh.Return &lt;- diff(sh.Adjusted.Close)/sh.Adjusted.Close[-length(sh.Adjusted.Close)]
+sh.Return &lt;- c(NA,sh.Return)
+sh.df$Return &lt;- sh.Return
+sh.df &lt;- na.omit(sh.df)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (6)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Precio y retorno del Shanghai Composite Index (上海证券交易所综合股价指)</p>
+
+<pre><code class="r">g3 &lt;- ggplot(sh.df)
+g3 &lt;- g3 + geom_line(aes(x = Date, y = Adjusted.Close), col=&quot;darkblue&quot;)
+g3 &lt;- g3 + labs(title = &quot;Shanghai Composite Index&quot;, x = &quot;Date&quot;, y = &quot;Nominal Price (CNY)&quot;)
+
+g4 &lt;- ggplot(sh.df)
+g4 &lt;- g4 + geom_line(aes(x = Date, y = Return), col=&quot;darkblue&quot;)
+g4 &lt;- g4 + labs(title = &quot;&quot;, x = &quot;Date&quot;, y = &quot;Monthly Return (%)&quot;)
+
+grid.arrange(g3, g4, nrow=2)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (7)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Precio y retorno del Shanghai Composite Index (上海证券交易所综合股价指)</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (8)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comparación de precios y retornos de ambos índices</p>
+
+<pre><code class="r">hk.Adjusted.Close &lt;- hk.df[,c(&quot;Date&quot;,&quot;Adjusted.Close&quot;)]
+sh.Adjusted.Close &lt;- sh.df[,c(&quot;Date&quot;,&quot;Adjusted.Close&quot;)]
+sh.Adjusted.Close$Adjusted.Close &lt;- sh.Adjusted.Close$Adjusted.Close * 1.21
+hk.sh.prices &lt;- merge(hk.Adjusted.Close, sh.Adjusted.Close, by=&#39;Date&#39;)
+colnames(hk.sh.prices) &lt;- c(&quot;Date&quot;,&quot;hk.Adjusted.Close&quot;,&quot;sh.Adjusted.Close&quot;)
+
+hk.sh.prices.melt &lt;- melt(hk.sh.prices, id=&quot;Date&quot;)  # convert to long format
+
+g5 &lt;- ggplot(data=hk.sh.prices.melt, aes(x=Date, y=value, colour=variable))
+g5 &lt;- g5 + geom_line()
+g5 &lt;- g5 + scale_color_manual(&quot;Index&quot;,labels = c(&quot;HSI&quot;, &quot;SCI&quot;), values = c(&quot;royalblue&quot;,
+                                                                           &quot;darkred&quot;))
+g5 &lt;- g5 + labs(title=&quot;Index Comparison&quot;, x=&quot;Date&quot;, y=&quot;Adjusted Close (HKD)&quot;)
+g5
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (9)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comparación de precios y retornos de ambos índices</p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (10)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Prueba de normalidad (Shapiro-Wilk ya que Kolmogorov-Smirov requiere continuidad en la distribución)</p>
+
+<pre><code class="r">shapiro.test(hk.df$Return)
+shapiro.test(sh.df$Return)
+
+    Shapiro-Wilk normality test
+data:  hk.df
+W = 0.96565, p-value = 0.002472
+
+data:  sh.df$Return
+W = 0.98541, p-value = 0.1878
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (11)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comparación de los retornos del HSI y el SCI </p>
+
+<pre><code class="r">hk.Return &lt;- hk.df[,c(&quot;Date&quot;,&quot;Return&quot;)]
+sh.Return &lt;- sh.df[,c(&quot;Date&quot;,&quot;Return&quot;)]
+hk.sh.returns &lt;- merge(hk.Return, sh.Return, by=&#39;Date&#39;)
+hk.sh.returns &lt;- hk.sh.returns[hk.sh.returns$Date &gt; &quot;2014-12-31&quot;,]
+colnames(hk.sh.returns) &lt;- c(&quot;Date&quot;,&quot;hk.Return&quot;,&quot;sh.Return&quot;)
+
+hk.sh.returns.melt &lt;- melt(hk.sh.returns, id=&quot;Date&quot;)  # convert to long format
+g10 &lt;- ggplot(data=hk.sh.returns.melt, aes(x=Date, y=value, colour=variable))
+g10 &lt;- g10 + geom_point() + geom_line()
+g10 &lt;- g10 + scale_color_manual(&quot;Index&quot;,labels = c(&quot;HSI&quot;, &quot;SCI&quot;), values = c(&quot;royalblue&quot;, 
+                                                                             &quot;red&quot;))
+g10 &lt;- g10 + labs(title=&quot;Index Comparison&quot;, x=&quot;Date&quot;, y=&quot;Return (%)&quot;)
+g10
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 1 (12)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Comparación de los retornos del HSI y el SCI </p>
+
+<div class="rimage center"><img src="fig/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Ejercicio 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usando la librería <code>Quandl</code>y <code>ggplot2</code>:</p>
+
+<ol>
+<li>Descargue las series de precios mensuales de Cheung Kong Holdings Hong Kong (长江实业集团香港) para el mismo periodo que el HSI y calcule los retornos mensuales de la acción.</li>
+<li>Construya un gráfico que contenga el retorno de ambos índices (¿Cuál tiene mayor volatilidad?)</li>
+<li>Calcule el beta de CAPM de la acción por definición y usando el comando <code>lm</code> (¿Es la acción más o menos riesgosa que el portafolio de mercado?)</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (1)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Descargo los datos de CHK, ordeno por fecha y calculo los retornos</p>
+
+<pre><code class="r">ckh.df &lt;- Quandl(&quot;YAHOO/HK_0001&quot;, authcode=&quot;UocFPgYgxkTyrXN4UsU9&quot;, start_date=&quot;2014-12-31&quot;, 
+                 end_date=&quot;2015-09-25&quot;, collapse=&quot;monthly&quot;, type = &quot;raw&quot;)
+saveRDS(ckh.df,&quot;ckh.df.RData&quot;)
+</code></pre>
+
+<pre><code class="r">ckh.df &lt;- readRDS(&quot;ckh.df.RData&quot;)
+colnames(ckh.df)[7] &lt;- &quot;Adjusted.Close&quot;
+ckh.df &lt;- ckh.df[order(as.Date(ckh.df$Date)),]
+ckh.Adjusted.Close &lt;- ckh.df$Adjusted.Close
+chk.Return &lt;- diff(ckh.Adjusted.Close)/ckh.Adjusted.Close[-length(ckh.Adjusted.Close)]
+chk.Return &lt;- c(NA,chk.Return)
+ckh.df &lt;- na.omit(ckh.df)
+ckh.df$Return &lt;- chk.Return
+ckh.Return &lt;- ckh.df[,c(&quot;Date&quot;,&quot;Return&quot;)]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Creo un cuadro de datos con los retornos del HSI y de CKH ordenados por fecha</p>
+
+<pre><code class="r">hk.ckh.returns &lt;- merge(hk.Return, ckh.Return, by=&#39;Date&#39;)
+hk.ckh.returns &lt;- na.omit(hk.ckh.returns)
+colnames(hk.ckh.returns) &lt;- c(&quot;Date&quot;,&quot;hk.Return&quot;,&quot;ckh.Return&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Gráfico de los retornos de HSI y CHK comparados</p>
+
+<pre><code class="r">hk.ckh.returns.melt &lt;- melt(hk.ckh.returns, id=&quot;Date&quot;)  # convert to long format
+g11 &lt;- ggplot(data=hk.ckh.returns.melt, aes(x=Date, y=value, colour=variable))
+g11 &lt;- g11 + geom_point() + geom_line()
+g11 &lt;- g11 + scale_color_manual(&quot;Variable&quot;,labels = c(&quot;HSI&quot;, &quot;CKH&quot;), values = c(&quot;royalblue&quot;, 
+                                                                                &quot;red&quot;))
+g11 &lt;- g11 + labs(title=&quot;Index Comparison&quot;, x=&quot;Date&quot;, y=&quot;Return (%)&quot;)
+g11
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="rimage center"><img src="fig/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" class="plot" /></div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (5)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Calculo de la tasa libre de riesgo, correlación y voldatilidad</p>
+
+<pre><code class="r">#http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html
+#http://www.bloomberg.com/markets/rates-bonds/government-bonds/us
+usa.risk.free &lt;- 0.31/100
+hk.risk.premium &lt;- 0.60/100
+
+hk.ckh.returns$hk.Risk.free &lt;- usa.risk.free + hk.risk.premium
+hk.ckh.returns$hk.Risk.premium &lt;- hk.ckh.returns$hk.Return - hk.ckh.returns$hk.Risk.free
+
+hk.Return.vector &lt;- as.vector(hk.ckh.returns$hk.Return)
+ckh.Return.vector &lt;- as.vector(hk.ckh.returns$ckh.Return)
+
+cor.hk.ckh &lt;- cov(ckh.Return.vector, hk.Return.vector)
+var.hk &lt;- var(hk.Return.vector)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Desarrollo Ejercicio 2 (6)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Estimación del riesgo de CHK respecto del HSI</p>
+
+<pre><code class="r">cor.hk.ckh/var.hk # (beta de CAPM)
+[1] 0.7745482
+
+fit &lt;- lm(ckh.Return ~ hk.Risk.premium, data = hk.ckh.returns) 
+summary(fit)
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)      0.03303    0.01916   1.724    0.128  
+hk.Risk.premium  0.77455    0.28027   2.764    0.028 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.05525 on 7 degrees of freedom
+Multiple R-squared:  0.5218,    Adjusted R-squared:  0.4535 
+F-statistic: 7.637 on 1 and 7 DF,  p-value: 0.02795
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Tarea</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Descargue las series de precios del IPSA y una empresa que transa en la BCS en el mismo periodo que en los ejercicios anteriores. Replique los ejercicios anteriores con sus datos.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Aplicaciones de OLS en finanzas (1)'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Aplicaciones de OLS en finanzas (2)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Aplicaciones de OLS en finanzas (3)'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Aplicaciones de OLS en finanzas (4)'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Aplicaciones de OLS en finanzas (5)'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Aplicaciones de OLS en finanzas (6)'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Ejercicio 1'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Desarrollo Ejercicio 1 (1)'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Desarrollo Ejercicio 1 (2)'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Desarrollo Ejercicio 1 (3)'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Desarrollo Ejercicio 1 (4)'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Desarrollo Ejercicio 1 (5)'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Desarrollo Ejercicio 1 (6)'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Desarrollo Ejercicio 1 (7)'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Desarrollo Ejercicio 1 (8)'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Desarrollo Ejercicio 1 (9)'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Desarrollo Ejercicio 1 (10)'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Desarrollo Ejercicio 1 (11)'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Desarrollo Ejercicio 1 (12)'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Ejercicio 2'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Desarrollo Ejercicio 2 (1)'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Desarrollo Ejercicio 2 (2)'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Desarrollo Ejercicio 2 (3)'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Desarrollo Ejercicio 2 (4)'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Desarrollo Ejercicio 2 (5)'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Desarrollo Ejercicio 2 (6)'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Tarea'>
+         27
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../../libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="../../libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
