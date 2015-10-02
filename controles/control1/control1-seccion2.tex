@@ -1,0 +1,250 @@
+\documentclass[11pt,oneside,spanish]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{array}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[linkcolor=blue,colorlinks=true,urlcolor=blue]{hyperref}
+
+\usepackage{import}
+\graphicspath{{figuras/}}
+
+\usepackage{multicol}
+
+\usepackage{enumerate}
+
+\usepackage{booktabs}
+
+\theoremstyle{definition}
+\newtheorem{defi}{Definici\'on}
+\newtheorem{car}{Caracterizaci\'on}
+\headheight 36pt
+\usepackage{geometry}
+\geometry{verbose,letterpaper,tmargin=30mm,bmargin=30mm,lmargin=25mm,rmargin=25mm}
+\parindent 0em
+\parskip 0ex
+
+\newtheorem{ejercicio}{Ejercicio}
+\newtheorem{teorema}{Teorema}
+\newtheorem{lema}{Lema}
+\newtheorem{corolario}{Corolario}
+\theoremstyle{definition}\newtheorem{definicion}{Definicin}
+\theoremstyle{definition}\newtheorem{ejemplo}{Ejemplo}
+\theoremstyle{remark}\newtheorem{nota}{\textsc{Nota}}
+\theoremstyle{definition}\newtheorem{proposicion}{Proposicin}
+\theoremstyle{definition}\newtheorem{problema}{Problema}
+\newenvironment{demostracion}{\textsc{Demostraci\'{o}n.}}{\halmos}
+
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\eq}[1]{\begin{equation} #1 \end{equation}}
+\newcommand{\dpr}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\emqc}[1]{#1 \in \N}
+\newcommand{\ssuc}{\{x_{n_k}\}_{k\in\N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\sen}{\text{sen}}
+\newcommand{\senh}{\text{senh}}
+\newcommand{\adh}[1]{\text{adh}({#1})}
+\newcommand{\der}[1]{\text{der}({#1})}
+\newcommand{\inte}[1]{\text{int}({#1})}
+\newcommand{\fr}[1]{\text{fr}({#1})}
+\newcommand{\co}[1]{\text{co}({#1})}
+\newenvironment{respuesta}{\smallskip \textbf{\textsf{Respuesta}} \sffamily \newline}{\hfill}
+\newcommand{\re}[1]{\begin{respuesta} #1 \end{respuesta}}  
+\newenvironment{solucion}{\smallskip \textbf{\textsf{Soluci\'on}} \sffamily \newline}{\hfill}
+\newcommand{\so}[1]{\begin{solucion} #1 \end{solucion}}  
+
+\makeatletter
+\def\ScaleIfNeeded{
+\ifdim\Gin@nat@width>\linewidth
+\linewidth
+\else
+\Gin@nat@width
+\fi
+}
+\makeatother
+
+\usepackage[mathlf,textlf,minionint,openg]{MinionPro}
+\usepackage[bb=lucida,bbscaled=.95]{mathalfa}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+\usepackage{listings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\thispagestyle{fancy}
+\lhead{Universidad Nacional Andr\'es Bello}
+\rhead{An\'alisis de Datos}
+
+\includegraphics[width=8em]{by-nc-sa.pdf}
+
+\begin{center}
+\textbf{Control de Laboratorio N$^\circ$1  - Secci\'on 2} 
+\end{center}
+
+\bigskip
+
+Nombre: \underline{\textcolor{white}{---------------------------------------------------}} \hspace{2mm} RUN: \underline{\textcolor{white}{---------------------------}}
+
+\bigskip
+
+Escriba el c\'odigo o el desarrollo algebraico que permite resolver cada pregunta. Las preguntas sin justificaci\'on se consideran omitidas. Marque sus respuestas con \textbf{l\'apiz pasta o tinta} a continuaci\'on.
+
+\bigskip
+
+\begin{tikzpicture}[font=\small]
+    \foreach \line in {1,2,...,10} {
+        \begin{scope}[yshift=-\line cm]
+            \foreach \count/\desc in {1/A, 2/B, 3/C, 4/D} { 
+                \node at ({\count * 0.5}, 0.4) {\desc};
+                \node at (0,0) {\normalsize\textbf{\line}};
+                \node[draw,circle,inner sep=1pt] at ({\count * 0.5},0) {\count};
+            }
+        \end{scope}
+    }
+\end{tikzpicture}
+
+\newpage
+
+\begin{enumerate}[(1)]
+
+\item Considere los siguientes vectores con $x$ como input e $y$ como output
+\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
+ x <- c(0.61, 0.93, 0.83, 0.35, 0.54, 0.16, 0.91, 0.62, 0.62)
+ y <- c(0.67, 0.84, 0.6, 0.18, 0.85, 0.47, 1.1, 0.65, 0.36)
+\end{lstlisting}
+{\textquestiondown}Cu\'al es el valor $p$ de test de dos colas para determinar si acaso el $\beta_1$ de la regresi\'on lineal es 0 o no en un modelo sin constante con $y$ como regresor?
+	\begin{enumerate}[(a)]
+	\item 0,00062
+	\item 0,00003
+	\item 0,00002
+	\item 0,00014
+	\end{enumerate}
+	
+\item {\textquestiondown}Cu\'al es la diferencia entre $R^2$ y $\overline{R}^2$ en el problema anterior?
+	\begin{enumerate}[(a)]
+	\item 0,0438
+	\item 0,0223
+	\item 0.0115
+	\item -0.0115
+	\end{enumerate}	
+
+\item Considere el siguiente vector de datos y el vector de ponderadores
+\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
+x <- c(0.26, -1.54, 0.42, 0.95)
+w <- c(2, 1, 5, 3)
+\end{lstlisting}
+{\textquestiondown}Cu\'al es el valor de $\mu$ que minimiza la ecuaci\'on de m\'inimos cuadrados $\sum_{i=1}^n w_i(x_i-\mu)^2$?
+	\begin{enumerate}[(a)]
+	\item 0,1471
+	\item 0.3572
+	\item 0,3
+	\item 0,0025
+	\end{enumerate}
+	
+\item Considere los siguientes datos
+\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
+ x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44)
+ y <- c(1.39, 0.72, 1.55, 0.48, -1.59, 1.23, -0.65, 1.49, 0.05)
+\end{lstlisting}
+Estime una regresi\'on que pase por el origen considerando $x$ como input e $y$ como output. (Hint: no centre los datos ya que se pide una regresi\'on 	que pase por el origen y no por las medias de los datos.)
+{\textquestiondown}Cu\'al es el valor de la pendiente?
+	\begin{enumerate}[(a)]
+	\item 1.7641 
+	\item 1,0861
+	\item 1.2216
+	\item -1.6721
+	\end{enumerate}
+	
+\newpage
+	
+\item Cargue la  base da datos \texttt{mtcars} y estime una regresi\'on que explique la variable \texttt{mpg} en funci\'on de la variable \texttt{hp}. {\textquestiondown}Cu\'al es el coeficiente del intercepto?	
+	\begin{enumerate}[(a)]
+	\item -0.0682
+	\item 30,2851
+	\item 30.09886
+	\item 0,5591
+	\end{enumerate}
+
+\item Considere el vector 
+\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
+ x <- c(8.58, 10.46, 9.01, 9.64, 8.86)
+\end{lstlisting}
+Si se normalizan los datos {\textquestiondown}Cu\'al es el valor de la primera observaci\'on?	
+	\begin{enumerate}[(a)]
+	\item -0,9719
+	\item 0,8058
+	\item 8,886
+	\item 8,931
+	\end{enumerate}
+
+\item Sea $\beta_1$ la pendiente de un modelo en el que $Y$ es el output y $X$ es el input. Sea $\gamma_1$ la pendiente de un modelo en el que $X$ es el output e $Y$ es el input. {\textquestiondown}Cu\'al es el valor de $\beta_1 / \gamma_1$?		
+	\begin{enumerate}[(a)]
+	\item $\text{sd}(X)/\text{sd}(Y)$
+	\item $\text{var}(Y)/\text{var}(X)$
+	\item $1$
+	\item $\text{cor}(X,Y)$
+	\end{enumerate}
+
+\item Considere una regresi\'on hipot\'etica en la cual $Y$ es el output y $X$ es el input. La desviaci\'on t\'ipica del input es igual a la del output. La correlaci\'on entre ambas variables es $0,5$. {\textquestiondown}Cu\'al es el valor de la pendiente de un modelo en el que se invierte el input y el output?
+	\begin{enumerate}[(a)]
+	\item 2
+	\item 0,25
+	\item 4
+	\item 1
+	\end{enumerate}
+		
+\item Considere un modelo  lineal con datos hipot\'eticos en el que el input y el output tienen medias iguales a $\mu_1$ y $\mu_2$ respectivamente. {\textquestiondown}Qu\'e se puede afirmar respecto del intercepto si se estima una regresi\'on con constante?		
+	\begin{enumerate}[(a)]
+	\item No hay informaci\'on suficiente
+	\item Tiene valor uno
+	\item Pasa por $(0,0)$
+	\item Pasa por $(\mu_1,\mu_2)$
+	\end{enumerate}	
+
+\newpage
+
+\item Considere el vector
+\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
+ x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
+\end{lstlisting}
+{\textquestiondown}Cu\'al es el valor que minimiza la suma de las distancias el cuadrado entre estos puntos y el valor mismo?
+	\begin{enumerate}[(a)]
+	\item 0,571
+	\item 0,8
+	\item 0,36
+	\item 0,573
+	\end{enumerate}
+
+\end{enumerate}
+
+\bigskip
+
+\textbf{Tiempo: 20 minutos}
+
+\medskip
+
+\textbf{0,6 puntos por cada respuesta correcta}\\
+\textbf{-0,6 puntos por cada respuesta incorrecta}\\
+\textbf{-1 punto por cada respuesta omitida}
+
+\end{document}

@@ -23,7 +23,7 @@ knit : slidify::knit2slides
 ```{r setup, cache = FALSE, echo = FALSE, message = FALSE, warning = FALSE, tidy = FALSE}
 library(knitr) 
 options(width = 100)
-opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', tidy = F, cache.path = '.cache/', fig.path = 'fig/')
 
 options(xtable.type = 'html')
 knit_hooks$set(inline = function(x) {
@@ -215,7 +215,7 @@ grid.arrange(g1, g2, nrow=2)
 
 Precio y retorno del HSI (恒生指數)
 
-```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 g1 <- ggplot(hk.df)
 g1 <- g1 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
 g1 <- g1 + labs(title = "Hang Seng Index", x = "Date", y = "Nominal Price (HKD)")
@@ -269,7 +269,7 @@ grid.arrange(g3, g4, nrow=2)
 ## Desarrollo Ejercicio 1 (7)
 
 Precio y retorno del Shanghai Composite Index (上海证券交易所综合股价指)
-```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 g3 <- ggplot(sh.df)
 g3 <- g3 + geom_line(aes(x = Date, y = Adjusted.Close), col="darkblue")
 g3 <- g3 + labs(title = "Shanghai Composite Index", x = "Date", y = "Nominal Price (CNY)")
@@ -310,7 +310,7 @@ g5
 
 Comparación de precios y retornos de ambos índices
 
-```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 hk.Adjusted.Close <- hk.df[,c("Date","Adjusted.Close")]
 sh.Adjusted.Close <- sh.df[,c("Date","Adjusted.Close")]
 sh.Adjusted.Close$Adjusted.Close <- sh.Adjusted.Close$Adjusted.Close * 1.21
@@ -372,7 +372,7 @@ g10
 
 Comparación de los retornos del HSI y el SCI 
 
-```{r, echo=FALSE, fig.width=7, fig.height=4.5}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 hk.Return <- hk.df[,c("Date","Return")]
 sh.Return <- sh.df[,c("Date","Return")]
 hk.sh.returns <- merge(hk.Return, sh.Return, by='Date')
@@ -450,7 +450,7 @@ g11
 
 ## Desarrollo Ejercicio 2 (4)
 
-```{r, echo=FALSE, fig.width=7, fig.height=5}
+```{r, echo=FALSE, fig.width=8, fig.height=6}
 hk.ckh.returns.melt <- melt(hk.ckh.returns, id="Date")  # convert to long format
 g11 <- ggplot(data=hk.ckh.returns.melt, aes(x=Date, y=value, colour=variable))
 g11 <- g11 + geom_point() + geom_line()

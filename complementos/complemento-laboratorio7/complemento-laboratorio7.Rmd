@@ -1,0 +1,147 @@
+---
+title: "Complemento Laboratorio Nº7"
+subtitle: Análisis de Datos
+author: "Profesores: Ramón H. Cornejo-Muñoz y Felipe Rojas</br>Profesor Ayudante de Laboratorio: Mauricio Vargas</br>Ayudantes: Franco Mansilla y Mauricio Díaz</br></br>Universidad Nacional Andrés Bello"
+output: html_document
+widgets: mathjax
+url:
+  assets: ../../assets
+  lib: ../../libraries
+mode: selfcontained # {standalone, draft}
+---
+
+<a href='http://creativecommons.org/licenses/by-nc-sa/3.0/'>
+    <img width = '80px' src = 'http://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png'>
+</a>
+
+## ¿Por qué usar series de tiempo?
+
+La estacionalidad de los datos y la dependencia entre observaciones ordenadas temporalmente requiere de un análisis para el cuál la teoría ha desarrollado herramientas específicas. El estudio de las series de tiempo se relaciona estrechamente con el estudio de técnicas para analizar la dependencia temporal entre observaciones.
+
+De esto se debe introducir variables rezagadas y en muchas aplicaciones se deben descomponer las series para determinar la componente estacional y la aleatoria que afectan los datos.
+
+En el día a día de cualquier banco o institución financiera las series de tiempo son una herramienta útil.
+
+Librerías necesarias para trabajar con series de tiempo en el contexto financiero
+```{r, message=FALSE}
+require(forecast);require(ggplot2);require(gridExtra);require(PerformanceAnalytics);require(quantmod);require(Quandl);require(reshape)
+```
+
+## Ejemplo: Serie de precios de una acción
+
+### Gráficos y calculo de retornos
+
+Vamos a trabajar con los datos del índice Hang Seng vistos en laboratorio. En estricto rigor este índice es un portafolio (o combinación de distintas acciones) que se puede tomar como una referencia del estado mercado en determinados contextos. 
+
+Esta vez importaremos los datos directamente en formato de series de tiempo de R pero descargaremos la serie semanal
+```{r}
+#hk <- Quandl("YAHOO/INDEX_HSI", collapse="monthly", type = "zoo", authcode = "...")
+#saveRDS(hk,"hk.RData")
+hk <- readRDS("hk.Rdata")
+```
+
+Se puede acotar el periodo analizado con el comando `window`
+```{r}
+hk <- window(hk, start = '2000-01-01', end = '2015-08-31')
+```
+
+Lo primero será graficar la componente estacional y la componente aleatoria de la serie
+```{r}
+plot(stl(hk[,4],s.window="periodic"), main = "HSI Decomposition")
+```
+
+Luego se puede graficar la tendencia usando media móvil de $n$ periodos (usaremos 3 periodos para el ejemplo)
+```{r}
+plot(rollapply(hk[,4],3,mean),  main = "3 weeks rolling average", ylab = "Price")
+```
+
+`PerformanceAnalytics` permite generar gráficos con un resultado aceptable. La ventaja de esta librería es que realiza automáticamente el cálculo de los retornos y los dropdowns
+```{r}
+charts.PerformanceSummary(
+  ROC(hk[,4], n = 1, type = "discrete"),
+  main = "Hang Seng Index"
+)
+```
+
+Un caso cotidiano de estacionalidad es el retorno de una acción. Por esto el foco de la teoría está en los retornos más que en los precios. Los retornos se pueden calcular como retorno simple o retorno compuesto
+```{r}
+ret.simple <- diff(hk[,4]) / lag(hk[,4], k = -1) * 100
+ret.compuesto <- diff(log(hk[,4])) * 100
+```
+
+Interesa saber como se distribuyen los retornos
+```{r}
+summary(coredata(ret.simple))
+summary(coredata(ret.compuesto))
+```
+
+Por ejemplo, en los retornos compuestos el menor valor es -25.45% y si quiero saber la fecha en que se obtuvo esa pérdida ejecuto
+```{r}
+ret.compuesto[which.max(ret.compuesto)]
+```
+
+Los datos que entrega `summary` permiten construir un histograma para conocer la distruibución de los retornos
+```{r}
+hist(ret.compuesto, breaks=100, main = "HSI Histogram of Compounded Returns", col = "royalblue", xlab="%")
+```
+
+Los cuantiles son importantes ya que dan información útil sobre la distribución de los retornos. Se puede determinar la probabilidad de que en un mes el retorno sea inferior al $x$% 
+```{r}
+quantile(ret.compuesto, probs = 0.01)
+```
+Lo que quiere decir que la probabilidad de que la pérdida sea mayor a 16,6% es de un 1%. De acuerdo al histograma aquello puede ocurrir una vez en el año y de ocurrir en dicho mes la menor pérdida posible es 16,6%. 
+
+### Regresión en el contexto de series de tiempo
+
+Usaremos la metodología de Box & Jenkins (1976) que se agrupa en los modelos ARIMA (Autoregressive Integrated Moving Average) los que asumen que una observación puede depender únicamente de las observaciones anteriores o de valores anteriores de la componente de error.
+
+La metodología consiste en:
+
+1. Identificar el modelo
+2. Estimar el modelo
+3. Verificar el modelo
+
+Identificación y estimación del modelo. Se puede restringir la estimación a modelos de componente estacionaria o estacional y también se puede buscar el mejor modelo con ambas componentes. Por ahora nos centraremos en el primer caso.
+```{r}
+fit1 <- auto.arima(ret.simple, stationary = TRUE, seasonal = FALSE, ic="aic")
+summary(fit1)
+confint(fit1)
+```
+El mejor modelo de componente estacionaria es un AR1 y para verificar esto se puede graficar la autocorrelación parcial
+```{r, fig.height=8}
+tsdiag(fit1)
+```
+
+En el gráfico se observa que los residuos estandarizados no se agrupan en determinados periodos, la autocorrelación entre residuos no es considerable y el test de autocorrelación muestra que los valores $p$ son mayores a 0,1  por lo que no se puede rechazar la hipótesis nula de residuos independientes al 90% de confianza o mayor.
+
+Para ver el ajuste del modelo se puede graficar los datos observados y los estimados
+```{r}
+plot(fit1$x, lty = 1, main = "HSI returns: observed versus predicted values", ylab = "Return (%)", xlab = "Date")
+lines(fitted(fit1), lty = 1, lwd = 2, col = "red")
+```
+
+$\Longrightarrow$ Se debería probar un modelo con componente estacional.
+
+```{r}
+fit2 <- auto.arima(ret.simple, stationary = TRUE, seasonal = TRUE, ic="aic")
+summary(fit2)
+confint(fit2)
+```
+```{r, fig.height=8}
+tsdiag(fit2)
+```
+```{r}
+plot(fit2$x, lty = 1, main = "HSI returns: observed versus predicted values", ylab = "Return (%)", xlab = "Date")
+lines(fitted(fit2), lty = 1, lwd = 2, col = "red")
+```
+
+$\Longrightarrow$ Comparando los indicadores (e.g. RMSE) y los gráficos se prefiere el primer modelo.
+
+Se puede predecir el retorno del índice en los próximos seis meses
+```{r}
+predict(fit1, n.ahead=12)
+```
+
+$\Longrightarrow$ Las predicciones tendrán un error estándar en torno el 6% (bastante elevado)
+
+

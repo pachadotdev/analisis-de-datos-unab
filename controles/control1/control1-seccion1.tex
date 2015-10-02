@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{array}
 \usepackage{float}
@@ -98,10 +98,32 @@
 \includegraphics[width=8em]{by-nc-sa.pdf}
 
 \begin{center}
-\textbf{Pauta Control de Laboratorio N$^\circ$1 - Secci\'on 1} 
+\textbf{Control de Laboratorio N$^\circ$1  - Secci\'on 1} 
 \end{center}
 
 \bigskip
+
+Nombre: \underline{\textcolor{white}{---------------------------------------------------}} \hspace{2mm} RUN: \underline{\textcolor{white}{---------------------------}}
+
+\bigskip
+
+Escriba el c\'odigo o el desarrollo algebraico que permite resolver cada pregunta. Las preguntas sin justificaci\'on se consideran omitidas. Marque sus respuestas con \textbf{l\'apiz pasta o tinta} a continuaci\'on.
+
+\bigskip
+
+\begin{tikzpicture}[font=\small]
+    \foreach \line in {1,2,...,10} {
+        \begin{scope}[yshift=-\line cm]
+            \foreach \count/\desc in {1/A, 2/B, 3/C, 4/D} { 
+                \node at ({\count * 0.5}, 0.4) {\desc};
+                \node at (0,0) {\normalsize\textbf{\line}};
+                \node[draw,circle,inner sep=1pt] at ({\count * 0.5},0) {\count};
+            }
+        \end{scope}
+    }
+\end{tikzpicture}
+
+\newpage
 
 \begin{enumerate}[(1)]
 \item Considere el siguiente vector de datos y el vector de ponderadores
@@ -110,13 +132,12 @@
  w <- c(2, 1, 3, 1)
 \end{lstlisting}
 {\textquestiondown}Cu\'al es el valor de $\mu$ que minimiza la ecuaci\'on de m\'inimos cuadrados $\sum_{i=1}^n w_i(x_i-\mu)^2$?
-
-\textbf{Desarrollo.}
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> x <- c(0.18, -1.54, 0.42, 0.95)
-> w <- c(2, 1, 3, 1)
-> weighted.mean(x, w)
-[1] 0.1471429\end{lstlisting}
+	\begin{enumerate}[(a)]
+	\item 0,1471
+	\item 1,077
+	\item 0,3
+	\item 0,0025
+	\end{enumerate}
 	
 \item Considere los siguientes datos
 \begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
@@ -125,84 +146,72 @@
 \end{lstlisting}
 Estime una regresi\'on que pase por el origen considerando $x$ como input e $y$ como output. (Hint: no centre los datos ya que se pide una regresi\'on 	que pase por el origen y no por las medias de los datos.)
 {\textquestiondown}Cu\'al es el valor de la pendiente?
-
-\textbf{Desarrollo.}
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44)
-> y <- c(1.39, 0.72, 1.55, 0.48, -1.59, 1.23, -0.65, 1.49, 0.05)
-> lm( y ~ x - 1 )
-
- Call:
- lm(formula = y ~ x - 1)
-
- Coefficients:
-     x   
- 1.086 
-\end{lstlisting}
+	\begin{enumerate}[(a)]
+	\item 0,8623
+	\item 1,0861
+	\item -1,713
+	\item 0,59915
+	\end{enumerate}
 	
-\newpage 
-	
-\item Cargue la  base da datos \texttt{mtcars} y estime una regresi\'on que explique la variable \texttt{mpg} en funci\'on de la variable \texttt{wt}. {\textquestiondown}Cu\'al es el coeficiente de la pendiente?	
-
-\textbf{Desarrollo.}
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> data(mtcars)
-> lm(mpg ~ wt, mtcars)
-
- Call:
- lm(formula = mpg ~ wt, data = mtcars)
-
- Coefficients:
- (Intercept)           wt  
-      37.285       -5.344  
-\end{lstlisting}
+\item Cargue la  base da datos \texttt{mtcars} y estime una regresi\'on que explique la variable \texttt{mpg} en funci\'on de la variable \texttt{weight}. {\textquestiondown}Cu\'al es el coeficiente de la pendiente?	
+	\begin{enumerate}[(a)]
+	\item -9,559
+	\item 30,2851
+	\item -5,344
+	\item 0,5591
+	\end{enumerate}
 
 \item Considere una regresi\'on hipot\'etica en la cual $Y$ es el output y $X$ es el input. La desviaci\'on t\'ipica del input es la mitad de la del output. La correlaci\'on entre ambas variables es $0,5$. {\textquestiondown}Cu\'al es el valor de la pendiente de un modelo en el que se invierte el input y el output?
+	\begin{enumerate}[(a)]
+	\item 2
+	\item 0,25
+	\item 4
+	\item 1
+	\end{enumerate}
 
-\textbf{Desarrollo.}
-De acuerdo a lo visto en clase 
-$$\beta = \text{cor}(X,Y) \cdot \frac{\text{sd}(Y)}{\text{sd}(X)} =  1$$
-Si se invierte el output y el input el coeficiente de la pendiente es
-$$\gamma = \text{cor}(X,Y) \cdot \frac{\text{sd}(X)}{\text{sd}(Y)} = 0.25$$
+\newpage
 
 \item Considere el vector 
 \begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
  x <- c(8.58, 10.46, 9.01, 9.64, 8.86)
 \end{lstlisting}
 Si se normalizan los datos {\textquestiondown}Cu\'al es el valor de la primera observaci\'on?	
-
-\textbf{Desarrollo.}
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> x <- c(8.58, 10.46, 9.01, 9.64, 8.86)
-> mean <- mean(x)
-> sd <- sd(x)
-> (x-mean)/sd
-[1] -0.9718658  1.5310215 -0.3993969  0.4393366 -0.5990954
-\end{lstlisting}
+	\begin{enumerate}[(a)]
+	\item -0,9719
+	\item 8,58
+	\item 8,886
+	\item 8,931
+	\end{enumerate}
 
 \item Sea $\beta_1$ la pendiente de un modelo en el que $Y$ es el output y $X$ es el input. Sea $\gamma_1$ la pendiente de un modelo en el que $X$ es el output e $Y$ es el input. {\textquestiondown}Cu\'al es el valor de $\beta_1 / \gamma_1$?		
-
-\textbf{Desarrollo.}
-$$\displaystyle \frac{\beta}{\gamma} = \displaystyle\frac{\text{cor}(X,Y)\cdot \displaystyle \frac{sd(Y)}{sd(X)}}{\text{cor}(X,Y)\cdot \displaystyle \frac{\text{sd}(X)}{\text{sd}(Y)}} = \displaystyle \frac{\text{sd}^2(Y)}{\text{sd}^2(X)} = \displaystyle \frac{\text{var}(Y)}{\text{var}(X)}$$
-
+	\begin{enumerate}[(a)]
+	\item $\text{sd}(X)/\text{sd}(Y)$
+	\item $\text{var}(Y)/\text{var}(X)$
+	\item $1$
+	\item $\text{cor}(X,Y)$
+	\end{enumerate}
+	
 \item Considere un modelo  lineal con datos hipot\'eticos en el que el input y el output tienen media 0. {\textquestiondown}Qu\'e se puede afirmar respecto del intercepto si se estima una regresi\'on?		
-
-\textbf{Desarrollo.}
-En el modelo sin constante la regresi\'on pasa por $(0,0)$. En el modelo con constante la regresi\'on pasa por $(\overline{X},\overline{Y})$. Luego el \'unico caso posible a partir de los datos es que el intercepto sea cero en todos los casos.
+	\begin{enumerate}[(a)]
+	\item No hay informaci\'on suficiente
+	\item Tiene valor uno
+	\item Debe ser id\'entico a 0
+	\item Se indefine ya que se divide por cero
+	\end{enumerate}	
 
 \item Considere el vector
 \begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
  x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
 \end{lstlisting}
 {\textquestiondown}Cu\'al es el valor que minimiza la suma de las distancias el cuadrado entre estos puntos y el valor mismo?
+	\begin{enumerate}[(a)]
+	\item 0,571
+	\item 0,8
+	\item 0,36
+	\item 0,573
+	\end{enumerate}
 
-\textbf{Desarrollo.}
-Como se vio en clases el vector pedido es el que sus coordenadas son iguales a la media de los datos que se calcula de la siguiente manera:
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
-> mean(x)
-[1] 0.573
-\end{lstlisting}
+\newpage
 
 \item Considere los siguientes vectores con $x$ como input e $y$ como output
 \begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
@@ -210,34 +219,31 @@ Como se vio en clases el vector pedido es el que sus coordenadas son iguales a l
  y <- c(0.67, 0.84, 0.6, 0.18, 0.85, 0.47, 1.1, 0.65, 0.36)
 \end{lstlisting}
 {\textquestiondown}Cu\'al es el valor $p$ de test de dos colas para determinar si acaso el $\beta_1$ de la regresi\'on lineal es 0 o no?
-
-\textbf{Desarrollo.}
-\begin{lstlisting}[backgroundcolor=\color{Gray!20},frame=none,basicstyle=\ttfamily]
-> x <- c(0.61, 0.93, 0.83, 0.35, 0.54, 0.16, 0.91, 0.62, 0.62)
-> y <- c(0.67, 0.84, 0.6, 0.18, 0.85, 0.47, 1.1, 0.65, 0.36)
-> fit <- lm(y ~ x)
-> summary(fit)
-
-Call:
-lm(formula = y ~ x)
-
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)  
-(Intercept)   0.1885     0.2061   0.914    0.391  
-x             0.7224     0.3107   2.325    0.053 .
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.223 on 7 degrees of freedom
-Multiple R-squared:  0.4358,	Adjusted R-squared:  0.3552 
-F-statistic: 5.408 on 1 and 7 DF,  p-value: 0.05296
-\end{lstlisting}
+	\begin{enumerate}[(a)]
+	\item 0,05296
+	\item 0,391
+	\item 0,364
+	\item 0,0243
+	\end{enumerate}
 	
 \item {\textquestiondown}Cu\'al es la desviaci\'on t\'ipica residual en el problema anterior?
-
-\textbf{Desarrollo.}
-Id\'entico al desarrollo anterior.
+	\begin{enumerate}[(a)]
+	\item 0,438
+	\item 0,223
+	\item 0,435
+	\item 0,355
+	\end{enumerate}	
 
 \end{enumerate}
+
+\bigskip
+
+\textbf{Tiempo: 20 minutos}
+
+\medskip
+
+\textbf{0,6 puntos por cada respuesta correcta}\\
+\textbf{-0,6 puntos por cada respuesta incorrecta}\\
+\textbf{-1 punto por cada respuesta omitida}
 
 \end{document}
