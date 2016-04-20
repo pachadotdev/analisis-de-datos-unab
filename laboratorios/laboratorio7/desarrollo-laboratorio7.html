@@ -484,7 +484,7 @@ g10
   <article data-timings="">
     <p>Descargo los datos de CHK, ordeno por fecha y calculo los retornos</p>
 
-<pre><code class="r">ckh.df &lt;- Quandl(&quot;YAHOO/HK_0001&quot;, authcode=&quot;UocFPgYgxkTyrXN4UsU9&quot;, start_date=&quot;2014-12-31&quot;, 
+<pre><code class="r">ckh.df &lt;- Quandl(&quot;YAHOO/HK_0001&quot;, start_date=&quot;2014-12-31&quot;, 
                  end_date=&quot;2015-09-25&quot;, collapse=&quot;monthly&quot;, type = &quot;raw&quot;)
 saveRDS(ckh.df,&quot;ckh.df.RData&quot;)
 </code></pre>
@@ -569,7 +569,7 @@ hk.ckh.returns$hk.Risk.premium &lt;- hk.ckh.returns$hk.Return - hk.ckh.returns$h
 hk.Return.vector &lt;- as.vector(hk.ckh.returns$hk.Return)
 ckh.Return.vector &lt;- as.vector(hk.ckh.returns$ckh.Return)
 
-cor.hk.ckh &lt;- cov(ckh.Return.vector, hk.Return.vector)
+cov.hk.ckh &lt;- cov(ckh.Return.vector, hk.Return.vector)
 var.hk &lt;- var(hk.Return.vector)
 </code></pre>
 
@@ -584,7 +584,7 @@ var.hk &lt;- var(hk.Return.vector)
   <article data-timings="">
     <p>Estimación del riesgo de CHK respecto del HSI</p>
 
-<pre><code class="r">cor.hk.ckh/var.hk # (beta de CAPM)
+<pre><code class="r">cov.hk.ckh/var.hk # (beta de CAPM)
 [1] 0.7745482
 
 fit &lt;- lm(ckh.Return ~ hk.Risk.premium, data = hk.ckh.returns) 

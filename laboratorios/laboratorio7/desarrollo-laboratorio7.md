@@ -354,7 +354,7 @@ Usando la librería `Quandl`y `ggplot2`:
 Descargo los datos de CHK, ordeno por fecha y calculo los retornos
 
 ```r
-ckh.df <- Quandl("YAHOO/HK_0001", authcode="UocFPgYgxkTyrXN4UsU9", start_date="2014-12-31", 
+ckh.df <- Quandl("YAHOO/HK_0001", start_date="2014-12-31", 
                  end_date="2015-09-25", collapse="monthly", type = "raw")
 saveRDS(ckh.df,"ckh.df.RData")
 ```
@@ -424,7 +424,7 @@ hk.ckh.returns$hk.Risk.premium <- hk.ckh.returns$hk.Return - hk.ckh.returns$hk.R
 hk.Return.vector <- as.vector(hk.ckh.returns$hk.Return)
 ckh.Return.vector <- as.vector(hk.ckh.returns$ckh.Return)
   
-cor.hk.ckh <- cov(ckh.Return.vector, hk.Return.vector)
+cov.hk.ckh <- cov(ckh.Return.vector, hk.Return.vector)
 var.hk <- var(hk.Return.vector)
 ```
 
@@ -435,7 +435,7 @@ var.hk <- var(hk.Return.vector)
 Estimación del riesgo de CHK respecto del HSI
 
 ```r
-cor.hk.ckh/var.hk # (beta de CAPM)
+cov.hk.ckh/var.hk # (beta de CAPM)
 [1] 0.7745482
 
 fit <- lm(ckh.Return ~ hk.Risk.premium, data = hk.ckh.returns) 
