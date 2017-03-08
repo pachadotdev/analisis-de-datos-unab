@@ -33,7 +33,7 @@
     
 #Calcule el estimador de los parámetros
     
-    #PASO 1: Hacer una correlación sin constante
+    #PASO 1: Hacer una regresión sin constante
     regression_nocons <- lm(y ~ x1 + x2 -1, data=data)
     summary(regression_nocons) 
     
